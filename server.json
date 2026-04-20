@@ -1,0 +1,36 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.rcs-kz/bitrix24-mcp",
+  "description": "Bitrix24 Cloud MCP server — 45 tools across CRM, Tasks, Deals, Leads, Files, Disk.",
+  "version": "1.0.0",
+  "repository": {
+    "url": "https://github.com/rcs-kz/bitrix24-mcp",
+    "source": "github"
+  },
+  "websiteUrl": "https://github.com/rcs-kz/bitrix24-mcp",
+  "packages": [
+    {
+      "registryType": "npm",
+      "registryBaseUrl": "https://registry.npmjs.org",
+      "identifier": "@rcs-kz/bitrix24-mcp",
+      "version": "1.0.0",
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": [
+        {
+          "name": "BITRIX24_WEBHOOK_URL",
+          "description": "Inbound webhook URL of your Bitrix24 portal (https://<portal>.bitrix24.kz/rest/<user_id>/<token>/). Stored in the OS keychain on first run; this env var is a fallback for CI / containerised / headless deployments.",
+          "isRequired": false,
+          "isSecret": true
+        },
+        {
+          "name": "RCS_LICENSE_KEY",
+          "description": "Commercial license key issued after the 14-day trial. Stored in the OS keychain on first run; env var fallback only needed for CI / headless deployments.",
+          "isRequired": false,
+          "isSecret": true
+        }
+      ]
+    }
+  ]
+}
