@@ -1,0 +1,49 @@
+# bitrix24-mcp public front — keep this repo docs-only.
+# Anything that looks like source or build artifacts is a mistake here;
+# refuse it at the .gitignore layer.
+
+# Node / npm artifacts (should never appear in a docs repo)
+node_modules/
+dist/
+build/
+*.tgz
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+.npm/
+.yarn/
+.pnpm-store/
+
+# Editor / OS noise
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Secrets — must never land here (we distribute docs, not credentials)
+.env
+.env.*
+*.pem
+*.key
+*.p12
+*.pfx
+secrets/
+credentials/
+
+# Local draft / scratch
+.draft/
+.scratch/
+*.bak
+*.tmp
+
+# Build-time output that slipped in
+*.mcpb
+*.tar.gz
+*.zip
+
+# CI scratch that shouldn't be committed
+.ci-cache/
+coverage/

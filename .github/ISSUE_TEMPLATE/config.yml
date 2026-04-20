@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 🔒 Security finding
+    url: https://github.com/rcs-kz/bitrix24-mcp/security/policy
+    about: Do NOT open a public issue. Read SECURITY.md and email security@rcs.kz.
+  - name: 💬 Commercial / licensing question
+    url: mailto:support@rcs.kz
+    about: Pricing, invoicing, tenant-size negotiations, custom integration work.
+  - name: 📖 Documentation & install
+    url: https://rcs.kz/bitrix24-mcp/docs
+    about: Step-by-step install guide and full tool reference live on our landing.

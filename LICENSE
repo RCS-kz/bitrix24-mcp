@@ -1,0 +1,37 @@
+Documentation License — CC BY-ND 4.0
+=====================================
+
+Copyright (c) 2026 RCS.KZ (ТОО "РСЭС", Казахстан). All rights reserved.
+
+The contents of THIS REPOSITORY (documentation, README, install guides,
+threat-model summary, issue templates) are licensed under the Creative
+Commons Attribution-NoDerivatives 4.0 International License (CC BY-ND 4.0).
+
+You are free to:
+  - Share — copy and redistribute the material in any medium or format
+    for any purpose, even commercially.
+
+Under the following terms:
+  - Attribution  — You must give appropriate credit, provide a link to
+                   the license, and indicate if changes were made. You
+                   may do so in any reasonable manner, but not in any
+                   way that suggests the licensor endorses you or your
+                   use.
+  - NoDerivatives — If you remix, transform, or build upon the material,
+                    you may not distribute the modified material.
+
+The full legal code is available at:
+  https://creativecommons.org/licenses/by-nd/4.0/legalcode
+
+--------------------------------------------------------------------------
+
+The SOFTWARE known as "bitrix24-mcp" — including but not limited to the
+`.mcpb` bundle, the `@rcs-kz/bitrix24-mcp` npm package, the V8-bytecode
+production build, the license-server, and all client-side integration
+tooling — is NOT licensed under CC BY-ND 4.0. It is governed by the
+Commercial End User License Agreement (EULA) published at:
+
+  https://rcs.kz/bitrix24-mcp/eula
+
+See NOTICE.md for the rationale behind separating documentation
+licensing from the software license.
