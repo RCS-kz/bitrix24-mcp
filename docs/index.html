@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>bitrix24-mcp — Bitrix24 API agent for Claude, Cursor, and MCP-compatible AI</title>
+  <meta name="description" content="Expose 45+ Bitrix24 CRM and workflow tools to any MCP-compatible LLM. 14-day free trial.">
+  <meta property="og:title" content="bitrix24-mcp — Bitrix24 API agent for Claude and MCP clients">
+  <meta property="og:description" content="45+ tools · CRM · deals · leads · tasks · workflow · BI. One npm install away.">
+  <meta property="og:type" content="website">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { font-family: -apple-system, Segoe UI, Roboto, sans-serif; }
+    code, pre { font-family: ui-monospace, Menlo, monospace; }
+  </style>
+</head>
+<body class="bg-white text-slate-900">
+
+<!-- CONFIG — replace the values below from wrangler.toml + LS dashboard -->
+<script>
+window.BITRIX24_MCP_CFG = {
+  WORKER_ORIGIN: "https://bitrix24-mcp-license.shahruh.workers.dev",
+  BUY_URL: "https://rcs-kz.lemonsqueezy.com/checkout/buy/5a8de75c-c2de-449b-b2d0-7bf29552f61a"
+};
+</script>
+
+<header class="border-b border-slate-200">
+  <div class="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
+    <div class="flex items-center gap-2">
+      <span class="text-xl font-bold">bitrix24-mcp</span>
+      <span class="text-xs px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700">by RCS-kz</span>
+    </div>
+    <nav class="flex items-center gap-6 text-sm">
+      <a href="#features" class="hover:text-slate-600">Features</a>
+      <a href="#install" class="hover:text-slate-600">Install</a>
+      <a href="https://github.com/rcs-kz/bitrix24-mcp" class="hover:text-slate-600">GitHub</a>
+      <a href="trial.html" class="px-3 py-1.5 rounded-lg border border-slate-300 hover:bg-slate-50 text-sm">Start trial</a>
+    </nav>
+  </div>
+</header>
+
+<section class="max-w-5xl mx-auto px-6 py-20 text-center">
+  <h1 class="text-5xl font-bold tracking-tight">Bitrix24 for your AI agent.</h1>
+  <p class="mt-4 text-lg text-slate-600 max-w-2xl mx-auto">
+    45+ read/write tools for Bitrix24 CRM, deals, leads, tasks, and workflows —
+    ready for Claude Desktop, Cursor, Claude Code, or any MCP-compatible client.
+  </p>
+  <div class="mt-10 flex items-center justify-center gap-4 flex-wrap">
+    <a href="trial.html"
+       class="px-6 py-3 rounded-lg bg-slate-900 text-white font-medium hover:bg-slate-800">
+      Start 14-day free trial
+    </a>
+    <a id="buyBtn" href="#"
+       class="px-6 py-3 rounded-lg border border-slate-300 hover:bg-slate-50 font-medium">
+      Buy subscription →
+    </a>
+  </div>
+  <p class="mt-4 text-xs text-slate-500">No credit card for trial · Cancel anytime · KZ-based company</p>
+</section>
+
+<section id="features" class="bg-slate-50 py-20">
+  <div class="max-w-5xl mx-auto px-6">
+    <h2 class="text-3xl font-bold text-center">What's inside</h2>
+    <div class="mt-12 grid md:grid-cols-3 gap-6">
+      <div class="p-6 bg-white rounded-xl border border-slate-200">
+        <h3 class="font-semibold text-lg">CRM (18 tools)</h3>
+        <p class="mt-2 text-sm text-slate-600">List, create, update deals, leads, contacts, companies; move through pipelines; attach activities.</p>
+      </div>
+      <div class="p-6 bg-white rounded-xl border border-slate-200">
+        <h3 class="font-semibold text-lg">Tasks & Projects (14 tools)</h3>
+        <p class="mt-2 text-sm text-slate-600">Assign, comment, change stage, track time, manage subtasks and dependencies.</p>
+      </div>
+      <div class="p-6 bg-white rounded-xl border border-slate-200">
+        <h3 class="font-semibold text-lg">Workflow & BI (13 tools)</h3>
+        <p class="mt-2 text-sm text-slate-600">Trigger business processes, read dashboards, query activity streams, moderate users.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="install" class="max-w-3xl mx-auto px-6 py-20">
+  <h2 class="text-3xl font-bold">Install in 30 seconds</h2>
+  <ol class="mt-8 space-y-6 text-slate-700">
+    <li>
+      <p class="font-semibold">1. Install from npm</p>
+      <pre class="mt-2 bg-slate-900 text-slate-100 p-4 rounded-lg text-sm overflow-x-auto">npm i -g @rcs-kz/bitrix24-mcp</pre>
+    </li>
+    <li>
+      <p class="font-semibold">2. Get your Bitrix24 webhook URL</p>
+      <p class="text-sm mt-1 text-slate-600">Developer resources → Other → Inbound webhook → copy URL.</p>
+    </li>
+    <li>
+      <p class="font-semibold">3. Export your credentials</p>
+      <pre class="mt-2 bg-slate-900 text-slate-100 p-4 rounded-lg text-sm overflow-x-auto">export B24_WEBHOOK_URL="https://your.bitrix24.kz/rest/1/abc.../"
+export RCS_LICENSE_KEY="eyJ..."</pre>
+    </li>
+    <li>
+      <p class="font-semibold">4. Point your MCP client at it</p>
+      <pre class="mt-2 bg-slate-900 text-slate-100 p-4 rounded-lg text-sm overflow-x-auto">claude mcp add bitrix24 -- npx -y @rcs-kz/bitrix24-mcp</pre>
+    </li>
+  </ol>
+</section>
+
+<footer class="border-t border-slate-200">
+  <div class="max-w-5xl mx-auto px-6 py-8 text-sm text-slate-500 flex flex-wrap items-center justify-between gap-4">
+    <div>© 2026 RCS-kz · <a href="https://rcs.kz" class="hover:text-slate-700">rcs.kz</a></div>
+    <div class="flex gap-4">
+      <a href="https://github.com/rcs-kz/bitrix24-mcp" class="hover:text-slate-700">GitHub</a>
+      <a href="https://github.com/rcs-kz/bitrix24-mcp/blob/main/SECURITY.md" class="hover:text-slate-700">Security</a>
+      <a href="mailto:support@rcs.kz" class="hover:text-slate-700">Support</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  document.getElementById('buyBtn').href = window.BITRIX24_MCP_CFG.BUY_URL;
+</script>
+</body>
+</html>

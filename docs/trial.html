@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Start 14-day trial — bitrix24-mcp</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-50 text-slate-900">
+<script>
+window.BITRIX24_MCP_CFG = {
+  WORKER_ORIGIN: "https://bitrix24-mcp-license.shahruh.workers.dev"
+};
+</script>
+
+<div class="min-h-screen flex items-center justify-center p-6">
+  <div class="bg-white rounded-2xl shadow-sm border border-slate-200 w-full max-w-md p-8">
+    <a href="index.html" class="text-sm text-slate-500 hover:text-slate-700">← back</a>
+    <h1 class="mt-4 text-2xl font-bold">Start your 14-day trial</h1>
+    <p class="mt-2 text-sm text-slate-600">We'll email you a license key. No credit card required.</p>
+
+    <form id="trialForm" class="mt-6 space-y-4">
+      <label class="block">
+        <span class="text-sm font-medium">Email</span>
+        <input type="email" name="email" required autocomplete="email"
+               class="mt-1 w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900"
+               placeholder="you@company.com">
+      </label>
+      <button type="submit" id="submitBtn"
+              class="w-full px-4 py-2.5 bg-slate-900 text-white rounded-lg font-medium hover:bg-slate-800 disabled:opacity-50">
+        Send me a license key
+      </button>
+    </form>
+
+    <div id="result" class="mt-6 hidden"></div>
+
+    <p class="mt-6 text-xs text-slate-500">
+      By starting a trial you agree to the
+      <a href="https://github.com/rcs-kz/bitrix24-mcp/blob/main/LICENSE" class="underline">license terms</a>.
+      One trial per email address.
+    </p>
+  </div>
+</div>
+
+<script>
+const form = document.getElementById('trialForm');
+const btn = document.getElementById('submitBtn');
+const result = document.getElementById('result');
+
+form.addEventListener('submit', async (ev) => {
+  ev.preventDefault();
+  const email = new FormData(form).get('email');
+  btn.disabled = true; btn.textContent = 'Sending…';
+  result.classList.add('hidden');
+
+  try {
+    const resp = await fetch(window.BITRIX24_MCP_CFG.WORKER_ORIGIN + '/trial', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email })
+    });
+    const data = await resp.json();
+    if (resp.ok) {
+      result.className = 'mt-6 p-4 bg-emerald-50 text-emerald-900 rounded-lg text-sm';
+      result.innerHTML = `<b>Check your email.</b><br>Your license key was sent to <code>${email}</code>.<br>It will expire on <code>${new Date(data.expires_at * 1000).toISOString().slice(0,10)}</code>.`;
+      result.classList.remove('hidden');
+      btn.textContent = 'Sent ✓';
+    } else {
+      result.className = 'mt-6 p-4 bg-rose-50 text-rose-900 rounded-lg text-sm';
+      result.textContent = data.error || 'Something went wrong.';
+      result.classList.remove('hidden');
+      btn.disabled = false;
+      btn.textContent = 'Send me a license key';
+    }
+  } catch (err) {
+    result.className = 'mt-6 p-4 bg-rose-50 text-rose-900 rounded-lg text-sm';
+    result.textContent = 'Network error. Please try again.';
+    result.classList.remove('hidden');
+    btn.disabled = false;
+    btn.textContent = 'Send me a license key';
+  }
+});
+</script>
+</body>
+</html>
