@@ -147,43 +147,23 @@ Full threat model and 10-attack harness: [`docs/threat-model.md`](./docs/threat-
 
 ### Pricing
 
-- **299 USD / Bitrix24 tenant / year.**
-- **14-day free trial**, no credit card, no features gated.
-- Per-tenant — unlimited users in that tenant.
-- Includes updates for the licensed major version (1.x).
-- Support via `support@rcs.kz`, 1 business day SLA (Almaty time, UTC+5).
+| Tier | Price | What you get |
+|---|---|---|
+| **Solo** | **0 ₸ / forever** | 100 calls/day · 1 portal · personal use only |
+| **Pro** | **25 900 ₸/mo** (~$50) | Unlimited · 3 portals · 24h support · commercial use · 14-day trial |
 
-### Requirements
+**🛒 Direct checkout (Pro):** [rcs-kz.lemonsqueezy.com/checkout/buy/5a8de75c...](https://rcs-kz.lemonsqueezy.com/checkout/buy/5a8de75c-c2de-449b-b2d0-7bf29552f61a)
 
-- Claude Desktop 0.8.0+ (or any MCP-compliant client)
-- macOS 13+, Windows 10+, or Linux with `libsecret`
-- Bitrix24 Cloud tenant with admin rights to create an inbound webhook
-
-### Install
-
-Recommended: download the `.mcpb` bundle from [`rcs.kz/bitrix24-mcp`](https://rcs.kz/bitrix24-mcp) — one-click install in Claude Desktop. Step-by-step: [`docs/install/claude-desktop.md`](./docs/install/claude-desktop.md).
-
-Advanced:
+**🆓 Free Solo activation (5 seconds, no credit card):**
 
 ```bash
-npm install -g @rcs-kz/bitrix24-mcp
+curl -X POST https://bitrix24-mcp-license.shahruh.workers.dev/freemium \
+  -H "Content-Type: application/json" \
+  -d '{"email":"you@company.com","product":"bitrix24-mcp"}'
 ```
 
-### Support & SLA
+Subscription via [Lemon Squeezy](https://rcs-kz.lemonsqueezy.com) (Merchant of Record — RU/KZ cards work). Cancel anytime in 1 click.
 
-- Response within 1 business day (Mon–Fri, 09:00–18:00 Asia/Almaty, UTC+5).
-- Patch releases within 5 business days of confirmed reproduction.
-- Security: `security@rcs.kz` + PGP key fingerprint in [`SECURITY.md`](./SECURITY.md). 24 h ack, 7-day fix, reporter credited unless they ask otherwise.
-
-### Vendor
-
-Built and maintained by **RCS** (1С:франчайзинг Казахстан) — Almaty-based 1С franchise with 10+ years of enterprise ERP integration work across Kazakhstan, Russia, and Uzbekistan.
-
-- Website: <https://rcs.kz>
-- Email: `support@rcs.kz`
-- GitHub: <https://github.com/rcs-kz/bitrix24-mcp> (public README + docs; source proprietary)
-
----
 
 ## Links
 
