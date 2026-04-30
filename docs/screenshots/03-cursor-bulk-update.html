@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>bitrix24-mcp — bulk-update сделок через Cursor</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+  html, body { width: 1280px; height: 800px; overflow: hidden; background: #1e1e1e; }
+  .root { display: flex; height: 800px; }
+  .pane { flex: 1; height: 800px; overflow: hidden; }
+  .cursor { background: #1e1e1e; color: #d4d4d4; font-family: 'Menlo', ui-monospace, monospace; border-right: 1px solid #2d2d2d; }
+  .b24 { background: #fff; }
+  .titlebar { background: #2d2d2d; color: #d4d4d4; font-size: 13px; padding: 8px 14px; display: flex; gap: 8px; align-items: center; }
+  .titlebar .dot { width: 12px; height: 12px; border-radius: 50%; }
+  .titlebar .dot.red { background: #ff5f57; }
+  .titlebar .dot.yel { background: #febc2e; }
+  .titlebar .dot.grn { background: #28c840; }
+  .cursor .header { display: flex; align-items: center; gap: 14px; padding: 8px 14px; background: #252526; border-bottom: 1px solid #1a1a1a; font-size: 12px; color: #b8b8b3; }
+  .cursor .tab { padding: 4px 10px; background: #1e1e1e; border-radius: 4px 4px 0 0; color: #cccccc; }
+  .cursor .agent-status { margin-left: auto; color: #4ec9b0; }
+  .cursor .body { display: flex; height: calc(800px - 84px); }
+  .cursor .editor { flex: 1.4; padding: 14px 16px; overflow-y: auto; font-size: 12.5px; line-height: 1.55; }
+  .cursor .editor .ln { color: #6a6a6a; display: inline-block; width: 26px; text-align: right; padding-right: 10px; user-select: none; }
+  .cursor .kw { color: #569cd6; }
+  .cursor .str { color: #ce9178; }
+  .cursor .num { color: #b5cea8; }
+  .cursor .com { color: #6a9955; }
+  .cursor .fn { color: #dcdcaa; }
+  .cursor .var { color: #9cdcfe; }
+  .cursor .agent { width: 360px; background: #252526; border-left: 1px solid #1a1a1a; padding: 14px; overflow-y: auto; font-size: 12.5px; line-height: 1.5; font-family: -apple-system, sans-serif; color: #d4d4d4; }
+  .cursor .agent .lbl { color: #cb6cf5; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+  .cursor .agent .msg { padding: 10px 12px; background: #1e1e1e; border: 1px solid #333; border-radius: 6px; margin-bottom: 10px; font-size: 12.5px; }
+  .cursor .agent .tool { background: #1a3344; border: 1px solid #25556e; padding: 8px 10px; border-radius: 5px; margin: 6px 0; font-family: ui-monospace, Menlo, monospace; font-size: 11px; color: #79c0ff; }
+  .cursor .agent .progress { display: flex; align-items: center; gap: 8px; padding: 6px 0; font-size: 12px; color: #4ec9b0; }
+  .cursor .agent .progress .check { width: 14px; height: 14px; background: #4ec9b0; color: #1e1e1e; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; }
+  .cursor .term { background: #181818; border-top: 1px solid #2d2d2d; padding: 8px 14px; font-size: 11.5px; color: #aaaaaa; height: 100px; }
+  .cursor .term .prompt { color: #4ec9b0; }
+
+  .b24 .b24-header { background: #fff; border-bottom: 1px solid #e8e8e6; padding: 0 20px; display: flex; align-items: center; height: 48px; gap: 18px; font-size: 13px; color: #525c69; }
+  .b24 .b24-header .logo { font-weight: 700; color: #2fc6f6; font-size: 18px; }
+  .b24 .b24-header .nav span.active { color: #2fc6f6; font-weight: 600; }
+  .b24 .b24-header .avatar { width: 28px; height: 28px; border-radius: 50%; background: #44546e; color: white; font-size: 12px; display: flex; align-items: center; justify-content: center; font-weight: 600; margin-left: auto; }
+  .b24 .b24-content { padding: 20px 24px; height: calc(800px - 48px); overflow-y: auto; }
+  .b24 h1 { font-size: 18px; font-weight: 600; color: #1f2937; margin-bottom: 6px; }
+  .b24 .sub { font-size: 13px; color: #6b7280; margin-bottom: 14px; }
+  .b24 .stage-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 16px; }
+  .b24 .stage { padding: 10px 12px; border-radius: 8px; font-size: 13px; }
+  .b24 .stage .stage-name { font-weight: 600; margin-bottom: 4px; }
+  .b24 .stage .count { font-size: 18px; font-weight: 700; }
+  .b24 .stage.before { background: #fef3c7; color: #92400e; }
+  .b24 .stage.update { background: #dbeafe; color: #1e40af; position: relative; }
+  .b24 .stage.update::after { content: '→'; position: absolute; right: -16px; top: 50%; transform: translateY(-50%); color: #3b82f6; font-size: 18px; font-weight: 700; }
+  .b24 .stage.after { background: #d1fae5; color: #065f46; }
+  .b24 .deals-after { border: 1px solid #e8e8e6; border-radius: 8px; overflow: hidden; }
+  .b24 .deal-row { display: grid; grid-template-columns: 1fr 100px 110px; padding: 8px 14px; border-bottom: 1px solid #f0f0ee; align-items: center; font-size: 12.5px; }
+  .b24 .deal-row:last-child { border-bottom: none; }
+  .b24 .deal-row .title { font-weight: 500; color: #1f2937; }
+  .b24 .deal-row .amount { text-align: right; font-variant-numeric: tabular-nums; color: #4b5563; }
+  .b24 .deal-row .stage-old { color: #9ca3af; font-size: 11px; text-decoration: line-through; }
+  .b24 .deal-row .stage-new { background: #d1fae5; color: #065f46; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 600; text-align: center; }
+  .b24 .deal-row .arrow { color: #3b82f6; font-weight: 700; }
+</style>
+</head>
+<body>
+  <div class="root">
+    <div class="pane cursor">
+      <div class="titlebar"><span class="dot red"></span><span class="dot yel"></span><span class="dot grn"></span><span style="margin-left:12px">Cursor — bulk_close_won.ts</span></div>
+      <div class="header">
+        <div class="tab">bulk_close_won.ts</div>
+        <div class="agent-status">● Composer · @rcs-kz/bitrix24-mcp</div>
+      </div>
+      <div class="body">
+        <div class="editor">
+          <div><span class="ln">1</span><span class="com">// bulk-close сделок: 9 шт. в WON одной командой</span></div>
+          <div><span class="ln">2</span><span class="kw">import</span> { <span class="var">b24_crm_deal_update</span> } <span class="kw">from</span> <span class="str">'@rcs-kz/bitrix24-mcp'</span>;</div>
+          <div><span class="ln">3</span></div>
+          <div><span class="ln">4</span><span class="kw">const</span> <span class="var">deals</span> = [<span class="num">1937</span>,<span class="num">1935</span>,<span class="num">1933</span>,<span class="num">1931</span>,<span class="num">1929</span>,<span class="num">1927</span>,<span class="num">1925</span>,<span class="num">1923</span>,<span class="num">1921</span>];</div>
+          <div><span class="ln">5</span></div>
+          <div><span class="ln">6</span><span class="kw">async function</span> <span class="fn">closeBulk</span>() {</div>
+          <div><span class="ln">7</span>  <span class="kw">for</span> (<span class="kw">const</span> <span class="var">id</span> <span class="kw">of</span> <span class="var">deals</span>) {</div>
+          <div><span class="ln">8</span>    <span class="kw">await</span> <span class="fn">b24_crm_deal_update</span>({</div>
+          <div><span class="ln">9</span>      <span class="var">ID</span>: <span class="var">id</span>,</div>
+          <div><span class="ln">10</span>      <span class="var">fields</span>: { <span class="var">STAGE_ID</span>: <span class="str">'WON'</span>, <span class="var">CLOSEDATE</span>: <span class="kw">new</span> <span class="fn">Date</span>() }</div>
+          <div><span class="ln">11</span>    });</div>
+          <div><span class="ln">12</span>  }</div>
+          <div><span class="ln">13</span>  <span class="fn">console</span>.<span class="fn">log</span>(<span class="str">`✓ Закрыто ${deals.length} сделок`</span>);</div>
+          <div><span class="ln">14</span>}</div>
+          <div><span class="ln">15</span></div>
+          <div><span class="ln">16</span><span class="fn">closeBulk</span>();</div>
+          <div style="margin-top:14px"></div>
+          <div class="term">
+            <div><span class="prompt">$</span> bun run bulk_close_won.ts</div>
+            <div style="color:#4ec9b0">✓ Закрыто 9 сделок</div>
+            <div style="color:#aaaaaa">Total time: 1.84s · API calls: 9 (avg 204ms)</div>
+          </div>
+        </div>
+        <div class="agent">
+          <div class="lbl">Cursor Composer</div>
+          <div class="msg">Закрой одной командой все 9 сделок этого месяца в WON и поставь дату закрытия — сейчас.</div>
+          <div class="tool">→ b24_crm_deal_update × 9</div>
+          <div class="progress"><div class="check">✓</div>#1937 · ПЕТРОЧЕНКО</div>
+          <div class="progress"><div class="check">✓</div>#1935 · Прокопенко А.И. ИП</div>
+          <div class="progress"><div class="check">✓</div>#1933 · Прокопенко А.И. ИП</div>
+          <div class="progress"><div class="check">✓</div>#1931 · Табыс МС ТОО</div>
+          <div class="progress"><div class="check">✓</div>#1929 · Есенжол Н ТОО</div>
+          <div class="progress"><div class="check">✓</div>#1927 · Базыл</div>
+          <div class="progress"><div class="check">✓</div>#1925 · Астана Агропродукт</div>
+          <div class="progress"><div class="check">✓</div>#1923 · Professional Education</div>
+          <div class="progress"><div class="check">✓</div>#1921 · ИП ФРАНТ</div>
+          <div style="margin-top:10px; padding:8px 12px; background:#1a3a2a; border-radius:5px; color:#86efac; font-size:12px;">9/9 готово · 1.84 сек</div>
+        </div>
+      </div>
+    </div>
+    <div class="pane b24">
+      <div class="b24-header">
+        <div class="logo">Битрикс24</div>
+        <div style="display:flex; gap:14px;"><span>CRM</span><span class="active">Сделки</span><span>Лиды</span></div>
+        <div class="avatar">ШС</div>
+      </div>
+      <div class="b24-content">
+        <h1>Воронка продаж · обновлено только что</h1>
+        <div class="sub">9 сделок переведены в WON одной AI-командой</div>
+        <div class="stage-grid">
+          <div class="stage before"><div class="stage-name">Переговоры</div><div class="count">— 9</div></div>
+          <div class="stage update"><div class="stage-name">Bulk-update</div><div class="count">9 →</div></div>
+          <div class="stage after"><div class="stage-name">WON</div><div class="count">+ 9</div></div>
+        </div>
+        <div class="deals-after">
+          <div class="deal-row"><div><div class="title">Реал-КВ000001026 · ПЕТРОЧЕНКО</div></div><div class="amount">90 000 ₸</div><div><span class="stage-new">WON</span></div></div>
+          <div class="deal-row"><div><div class="title">Реал-КВ000001024 · Прокопенко А.И.</div></div><div class="amount">59 000 ₸</div><div><span class="stage-new">WON</span></div></div>
+          <div class="deal-row"><div><div class="title">Реал-КВ000001023 · Прокопенко А.И.</div></div><div class="amount">300 000 ₸</div><div><span class="stage-new">WON</span></div></div>
+          <div class="deal-row"><div><div class="title">Реал-КВ000001022 · Табыс МС ТОО</div></div><div class="amount">160 000 ₸</div><div><span class="stage-new">WON</span></div></div>
+          <div class="deal-row"><div><div class="title">Реал-КВ000001021 · Есенжол Н ТОО</div></div><div class="amount">130 000 ₸</div><div><span class="stage-new">WON</span></div></div>
+          <div class="deal-row"><div><div class="title">Реал-КВ000000631 · Базыл</div></div><div class="amount">9 000 ₸</div><div><span class="stage-new">WON</span></div></div>
+          <div class="deal-row"><div><div class="title">Реал-КВ000001018 · Астана Агропродукт</div></div><div class="amount">32 500 ₸</div><div><span class="stage-new">WON</span></div></div>
+          <div class="deal-row"><div><div class="title">Реал-КВ000001017 · Professional Education</div></div><div class="amount">565 000 ₸</div><div><span class="stage-new">WON</span></div></div>
+          <div class="deal-row"><div><div class="title">Реал-КВ000001010 · ИП ФРАНТ</div></div><div class="amount">150 000 ₸</div><div><span class="stage-new">WON</span></div></div>
+        </div>
+        <div style="margin-top:12px; padding: 8px 12px; background: #f0f9ff; border-radius: 6px; font-size: 12.5px; color: #075985;">⚡ 9 сделок обновлены за 1.84 сек · через Cursor IDE + bitrix24-mcp</div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

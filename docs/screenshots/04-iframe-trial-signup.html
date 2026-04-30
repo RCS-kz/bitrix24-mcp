@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>bitrix24-mcp — 14-дневный триал прямо в окне приложения</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+  html, body { width: 1280px; height: 800px; overflow: hidden; background: #f0f4f8; }
+  .b24-shell { width: 1280px; height: 800px; display: flex; flex-direction: column; background: #f7f9fc; }
+  .b24-top { height: 48px; background: #fff; border-bottom: 1px solid #e1e8ee; display: flex; align-items: center; padding: 0 24px; gap: 18px; font-size: 13px; color: #525c69; }
+  .b24-top .logo { font-weight: 700; color: #2fc6f6; font-size: 18px; }
+  .b24-top .breadcrumb { color: #6b7280; }
+  .b24-top .breadcrumb a { color: #2fc6f6; text-decoration: none; }
+  .b24-top .avatar { margin-left: auto; width: 30px; height: 30px; border-radius: 50%; background: #44546e; color: white; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; }
+  .b24-page { flex: 1; padding: 24px; display: flex; gap: 20px; }
+  .b24-sidebar { width: 220px; background: #fff; border-radius: 8px; padding: 16px; font-size: 13px; color: #4b5563; border: 1px solid #e1e8ee; }
+  .b24-sidebar .menu-item { padding: 8px 10px; border-radius: 6px; margin-bottom: 4px; cursor: pointer; }
+  .b24-sidebar .menu-item.active { background: #e0f2fe; color: #075985; font-weight: 600; }
+  .b24-sidebar .menu-item:hover:not(.active) { background: #f3f4f6; }
+  .b24-app-frame { flex: 1; background: #fff; border-radius: 12px; box-shadow: 0 4px 24px rgba(31, 41, 55, 0.08); border: 1px solid #e1e8ee; overflow: hidden; }
+  .frame-header { padding: 12px 18px; border-bottom: 1px solid #f0f0ee; display: flex; align-items: center; gap: 10px; font-size: 13px; color: #6b7280; }
+  .frame-header .icon { width: 28px; height: 28px; border-radius: 7px; background: linear-gradient(135deg, #0080ff, #00d4ff); color: white; font-weight: 700; font-size: 13px; display: flex; align-items: center; justify-content: center; }
+  .frame-header .title { color: #1f2937; font-weight: 600; font-size: 14px; }
+  .frame-header .badge { background: #d1fae5; color: #065f46; padding: 3px 10px; border-radius: 10px; font-size: 11px; font-weight: 600; margin-left: auto; }
+  .frame-body { padding: 32px 40px; height: calc(100% - 53px); display: flex; flex-direction: column; }
+  .hero { background: linear-gradient(135deg, #f0f9ff, #e0f2fe); border-radius: 10px; padding: 24px; margin-bottom: 22px; border: 1px solid #bae6fd; }
+  .hero h1 { font-size: 22px; color: #0c4a6e; margin-bottom: 6px; font-weight: 700; }
+  .hero p { color: #075985; font-size: 14px; line-height: 1.55; }
+  .hero .stats { display: flex; gap: 28px; margin-top: 14px; }
+  .hero .stat { font-size: 12px; color: #075985; }
+  .hero .stat b { display: block; font-size: 18px; color: #0c4a6e; font-weight: 700; }
+  .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 22px; }
+  .btn { padding: 14px 18px; border-radius: 8px; border: 1px solid #e5e7eb; background: #fff; color: #1f2937; font-size: 14px; cursor: pointer; text-align: left; display: flex; align-items: center; gap: 12px; transition: all 0.15s; }
+  .btn:hover { border-color: #0080ff; }
+  .btn-primary { background: linear-gradient(135deg, #0080ff, #00a4ff); color: white; border-color: #0080ff; font-weight: 600; box-shadow: 0 2px 8px rgba(0,128,255,0.25); }
+  .btn-primary:hover { transform: translateY(-1px); }
+  .btn .ic { width: 32px; height: 32px; border-radius: 6px; background: #e0f2fe; color: #0080ff; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 700; }
+  .btn-primary .ic { background: rgba(255,255,255,0.2); color: white; }
+  .btn .lbl { flex: 1; }
+  .btn .lbl .head { font-weight: 600; font-size: 14px; }
+  .btn .lbl .sub { font-size: 12px; color: #6b7280; margin-top: 2px; }
+  .btn-primary .lbl .sub { color: rgba(255,255,255,0.85); }
+  .features { border-top: 1px solid #e8e8e6; padding-top: 18px; }
+  .features h3 { font-size: 13px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; font-weight: 600; }
+  .features ul { list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 22px; font-size: 13px; color: #4b5563; }
+  .features li { display: flex; align-items: center; gap: 8px; }
+  .features li::before { content: '✓'; color: #10b981; font-weight: 700; }
+  .footer { margin-top: auto; font-size: 11px; color: #9ca3af; text-align: center; }
+  .footer a { color: #0080ff; text-decoration: none; }
+</style>
+</head>
+<body>
+  <div class="b24-shell">
+    <div class="b24-top">
+      <div class="logo">Битрикс24</div>
+      <div class="breadcrumb"><a href="#">Маркет</a> · <a href="#">Установленные</a> · bitrix24-mcp</div>
+      <div class="avatar">ШС</div>
+    </div>
+    <div class="b24-page">
+      <div class="b24-sidebar">
+        <div class="menu-item">CRM</div>
+        <div class="menu-item">Задачи и Проекты</div>
+        <div class="menu-item">Календарь</div>
+        <div class="menu-item">Чат и звонки</div>
+        <div class="menu-item">Сайты и Магазины</div>
+        <div class="menu-item">Маркет</div>
+        <div class="menu-item active">▶ bitrix24-mcp</div>
+      </div>
+      <div class="b24-app-frame">
+        <div class="frame-header">
+          <div class="icon">M</div>
+          <div class="title">bitrix24-mcp</div>
+          <div class="badge">Установлено · версия 2.0.2</div>
+        </div>
+        <div class="frame-body">
+          <div class="hero">
+            <h1>Управляйте Битрикс24 голосом из Claude, ChatGPT и Cursor</h1>
+            <p>47 встроенных операций над CRM, задачами, календарём — без переключения вкладок и копипаста.</p>
+            <div class="stats">
+              <div class="stat"><b>14</b>дней trial</div>
+              <div class="stat"><b>0</b>карта не нужна</div>
+              <div class="stat"><b>5 мин</b>setup</div>
+              <div class="stat"><b>3 AI</b>клиента</div>
+            </div>
+          </div>
+          <div class="actions">
+            <div class="btn btn-primary">
+              <div class="ic">⚡</div>
+              <div class="lbl">
+                <div class="head">Начать 14-дневный триал</div>
+                <div class="sub">Pro-функционал · без карты · отмена в любой момент</div>
+              </div>
+            </div>
+            <div class="btn">
+              <div class="ic">🔑</div>
+              <div class="lbl">
+                <div class="head">У меня есть лицензия</div>
+                <div class="sub">Введите license-token из почты</div>
+              </div>
+            </div>
+            <div class="btn">
+              <div class="ic">📖</div>
+              <div class="lbl">
+                <div class="head">Документация и Quickstart</div>
+                <div class="sub">5 минут до первого AI-вызова</div>
+              </div>
+            </div>
+            <div class="btn">
+              <div class="ic">💬</div>
+              <div class="lbl">
+                <div class="head">Поддержка</div>
+                <div class="sub">support@rcs.kz · ответ в 4 часа</div>
+              </div>
+            </div>
+          </div>
+          <div class="features">
+            <h3>Что получаешь в Pro-триале</h3>
+            <ul>
+              <li>Все 47 tools (CRM, Tasks, Calendar, IM)</li>
+              <li>Bulk-операции через batch_execute</li>
+              <li>Поддержка Claude, ChatGPT, Cursor, Cline</li>
+              <li>Кириллица в фильтрах и Smart-process</li>
+              <li>Webhook + OAuth (rate-limit safe)</li>
+              <li>Audit log в Cloudflare KV</li>
+            </ul>
+          </div>
+          <div class="footer">
+            После триала: Solo 0 ₸/мес, Pro 25 900 ₸/мес, Team 79 900 ₸/мес ·
+            <a href="https://rcs-kz.github.io/bitrix24-mcp/">подробнее</a> ·
+            <a href="https://rcs-kz.github.io/bitrix24-mcp/privacy.html">privacy</a> ·
+            <a href="https://rcs-kz.github.io/bitrix24-mcp/terms.html">terms</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

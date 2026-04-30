@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>bitrix24-mcp — поиск сделок голосом в Claude Desktop</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+  html, body { width: 1280px; height: 800px; overflow: hidden; background: #1a1a1a; }
+  .root { display: flex; height: 800px; }
+  .pane { flex: 1; height: 800px; overflow: hidden; }
+  .claude { background: #f7f7f5; border-right: 1px solid #d9d9d6; }
+  .b24 { background: #fff; }
+  .titlebar { background: #2a2a2a; color: #b8b8b3; font-size: 13px; padding: 8px 14px; display: flex; gap: 8px; align-items: center; border-bottom: 1px solid #444; }
+  .titlebar .dot { width: 12px; height: 12px; border-radius: 50%; }
+  .titlebar .dot.red { background: #ff5f57; }
+  .titlebar .dot.yel { background: #febc2e; }
+  .titlebar .dot.grn { background: #28c840; }
+  .claude .titlebar { background: #f7f7f5; color: #1a1a1a; border-bottom: 1px solid #e8e8e6; }
+  .claude .header { padding: 16px 24px; border-bottom: 1px solid #e8e8e6; font-size: 13px; color: #6b6b6b; display: flex; align-items: center; gap: 8px; }
+  .claude .header .logo { width: 24px; height: 24px; border-radius: 6px; background: linear-gradient(135deg, #c96442, #ed7651); display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 13px; }
+  .claude .chat { padding: 24px; height: calc(800px - 95px); overflow-y: auto; font-size: 14.5px; line-height: 1.55; color: #1f1f1f; }
+  .claude .msg { margin-bottom: 22px; }
+  .claude .msg.user { background: #ebeae3; padding: 12px 16px; border-radius: 10px; max-width: 88%; margin-left: auto; }
+  .claude .msg.user .role { display: none; }
+  .claude .msg.assistant .role { font-size: 12px; color: #b3603e; font-weight: 600; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.4px; }
+  .claude .tool-use { background: #f0eee5; border: 1px solid #e3decd; border-radius: 8px; padding: 10px 14px; margin: 10px 0; font-family: ui-monospace, Menlo, monospace; font-size: 12px; color: #4a4a4a; }
+  .claude .tool-use .head { color: #2c8a2c; font-weight: 600; margin-bottom: 4px; }
+  .claude .tool-use .body { white-space: pre-wrap; }
+  .claude table { width: 100%; border-collapse: collapse; margin: 8px 0 10px; font-size: 13px; }
+  .claude table th { background: #ebeae3; padding: 6px 10px; text-align: left; font-weight: 600; }
+  .claude table td { padding: 6px 10px; border-bottom: 1px solid #e8e8e6; }
+  .claude .summary { background: #fef3c7; border-left: 3px solid #f59e0b; padding: 10px 14px; border-radius: 4px; margin-top: 12px; font-size: 13px; }
+
+  .b24 .b24-header { background: #fff; border-bottom: 1px solid #e8e8e6; padding: 0 20px; display: flex; align-items: center; height: 48px; gap: 18px; font-size: 13px; color: #525c69; }
+  .b24 .b24-header .logo { font-weight: 700; color: #2fc6f6; font-size: 18px; }
+  .b24 .b24-header .nav { display: flex; gap: 14px; flex: 1; }
+  .b24 .b24-header .nav span { cursor: pointer; }
+  .b24 .b24-header .nav span.active { color: #2fc6f6; font-weight: 600; }
+  .b24 .b24-header .user { display: flex; align-items: center; gap: 8px; }
+  .b24 .b24-header .avatar { width: 28px; height: 28px; border-radius: 50%; background: linear-gradient(135deg, #5d6f86, #44546e); color: white; font-size: 13px; display: flex; align-items: center; justify-content: center; font-weight: 600; }
+  .b24 .b24-content { padding: 20px 24px; height: calc(800px - 48px); overflow-y: auto; }
+  .b24 h1 { font-size: 20px; font-weight: 600; margin-bottom: 6px; color: #1f2937; }
+  .b24 .sub { font-size: 13px; color: #6b7280; margin-bottom: 16px; }
+  .b24 .filter-chip { display: inline-block; background: #e0f2fe; color: #0369a1; padding: 4px 10px; border-radius: 14px; font-size: 12px; margin-right: 6px; margin-bottom: 6px; font-weight: 500; }
+  .b24 .deal-list { margin-top: 14px; border: 1px solid #e8e8e6; border-radius: 8px; overflow: hidden; }
+  .b24 .deal-row { display: grid; grid-template-columns: 28px 1fr 100px 80px; padding: 10px 14px; border-bottom: 1px solid #f0f0ee; align-items: center; font-size: 13px; }
+  .b24 .deal-row:last-child { border-bottom: none; }
+  .b24 .deal-row:hover { background: #fafaf8; }
+  .b24 .deal-row .stage { width: 8px; height: 8px; border-radius: 50%; background: #10b981; }
+  .b24 .deal-row .title { font-weight: 500; color: #1f2937; }
+  .b24 .deal-row .company { color: #6b7280; font-size: 12px; }
+  .b24 .deal-row .amount { font-weight: 600; color: #1f2937; text-align: right; font-variant-numeric: tabular-nums; }
+  .b24 .deal-row .badge { font-size: 11px; padding: 2px 6px; background: #d1fae5; color: #065f46; border-radius: 10px; text-align: center; }
+  .b24 .toast { position: fixed; bottom: 16px; right: calc(50% - 30px); background: #4f46e5; color: white; padding: 8px 14px; border-radius: 6px; font-size: 12px; display: flex; align-items: center; gap: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+</style>
+</head>
+<body>
+  <div class="root">
+    <div class="pane claude">
+      <div class="titlebar"><span class="dot red"></span><span class="dot yel"></span><span class="dot grn"></span><span style="margin-left:12px">Claude Desktop</span></div>
+      <div class="header"><div class="logo">C</div><span>Claude Sonnet 4.6</span><span style="color:#9ca3af; margin-left:auto">@rcs-kz/bitrix24-mcp · 47 tools</span></div>
+      <div class="chat">
+        <div class="msg user">Найди мне все сделки в Битрикс24 за последний месяц с суммой больше 100 000 ₸ — кто, сколько, на каком этапе. Я хочу понять кому позвонить сегодня.</div>
+        <div class="msg assistant">
+          <div class="role">Claude</div>
+          <div class="tool-use">
+            <div class="head">→ b24_crm_deal_list</div>
+            <div class="body">filter: { ">OPPORTUNITY": 100000, ">=DATE_CREATE": "2026-03-30" }
+order:  { OPPORTUNITY: "DESC" }
+select: ["ID","TITLE","STAGE_ID","OPPORTUNITY","COMPANY_ID"]</div>
+          </div>
+          <div>Нашёл 9 крупных сделок за последний месяц. Расставил по сумме:</div>
+          <table>
+            <thead><tr><th>Контрагент</th><th>Сумма</th><th>Стадия</th></tr></thead>
+            <tbody>
+              <tr><td>Professional Education Company</td><td>565 000 ₸</td><td>WON</td></tr>
+              <tr><td>Прокопенко А.И. ИП</td><td>300 000 ₸</td><td>WON</td></tr>
+              <tr><td>МолПродукт Сервис ТОО</td><td>250 000 ₸</td><td>WON</td></tr>
+              <tr><td>Кок Бәйтерек ТОО</td><td>200 000 ₸</td><td>WON</td></tr>
+              <tr><td>Аида ТОО</td><td>180 000 ₸</td><td>WON</td></tr>
+              <tr><td>Табыс МС ТОО</td><td>160 000 ₸</td><td>WON</td></tr>
+              <tr><td>ИП ФРАНТ</td><td>150 000 ₸</td><td>WON</td></tr>
+              <tr><td>Есенжол Н ТОО</td><td>130 000 ₸</td><td>WON</td></tr>
+              <tr><td>Юсупова Рашида ИП</td><td>126 700 ₸</td><td>WON</td></tr>
+            </tbody>
+          </table>
+          <div class="summary">💡 Все 9 сделок — на стадии <b>WON</b>, итого <b>2 061 700 ₸</b>. Ни одной зависшей. Если хочешь, могу посмотреть, кто из этих контрагентов ещё не получил повторный заказ — это и будет твой список звонков на сегодня.</div>
+        </div>
+      </div>
+    </div>
+    <div class="pane b24">
+      <div class="b24-header">
+        <div class="logo">Битрикс24</div>
+        <div class="nav"><span>CRM</span><span class="active">Сделки</span><span>Лиды</span><span>Контакты</span><span>Компании</span></div>
+        <div class="user"><div class="avatar">ШС</div></div>
+      </div>
+      <div class="b24-content">
+        <h1>Сделки</h1>
+        <div class="sub">RCS · rcs.bitrix24.kz</div>
+        <div>
+          <span class="filter-chip">Сумма ≥ 100 000 ₸</span>
+          <span class="filter-chip">С 30.03.2026</span>
+          <span class="filter-chip">9 результатов</span>
+        </div>
+        <div class="deal-list">
+          <div class="deal-row"><div class="stage"></div><div><div class="title">Professional Education Company</div><div class="company">Реал-КВ000001017 · 31.03.2026</div></div><div class="amount">565 000 ₸</div><div class="badge">WON</div></div>
+          <div class="deal-row"><div class="stage"></div><div><div class="title">Прокопенко А.И. ИП</div><div class="company">Реал-КВ000001023 · 13.04.2026</div></div><div class="amount">300 000 ₸</div><div class="badge">WON</div></div>
+          <div class="deal-row"><div class="stage"></div><div><div class="title">МолПродукт Сервис ТОО</div><div class="company">Реал-КВ000001009 · 31.03.2026</div></div><div class="amount">250 000 ₸</div><div class="badge">WON</div></div>
+          <div class="deal-row"><div class="stage"></div><div><div class="title">Кок Бәйтерек ТОО</div><div class="company">Реал-КВ000001006 · 30.03.2026</div></div><div class="amount">200 000 ₸</div><div class="badge">WON</div></div>
+          <div class="deal-row"><div class="stage"></div><div><div class="title">Аида ТОО</div><div class="company">Реал-КВ000001004 · 30.03.2026</div></div><div class="amount">180 000 ₸</div><div class="badge">WON</div></div>
+          <div class="deal-row"><div class="stage"></div><div><div class="title">Табыс МС ТОО</div><div class="company">Реал-КВ000001022 · 13.04.2026</div></div><div class="amount">160 000 ₸</div><div class="badge">WON</div></div>
+          <div class="deal-row"><div class="stage"></div><div><div class="title">ИП ФРАНТ</div><div class="company">Реал-КВ000001010 · 31.03.2026</div></div><div class="amount">150 000 ₸</div><div class="badge">WON</div></div>
+          <div class="deal-row"><div class="stage"></div><div><div class="title">Есенжол Н ТОО</div><div class="company">Реал-КВ000001021 · 13.04.2026</div></div><div class="amount">130 000 ₸</div><div class="badge">WON</div></div>
+          <div class="deal-row"><div class="stage"></div><div><div class="title">Юсупова Рашида ИП</div><div class="company">Реал-КВ000001005 · 30.03.2026</div></div><div class="amount">126 700 ₸</div><div class="badge">WON</div></div>
+        </div>
+        <div class="toast">⚡ MCP-запрос выполнен за 0.42 сек · 1 REST вызов · 9 строк</div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
