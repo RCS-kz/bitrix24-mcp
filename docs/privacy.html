@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Privacy Policy — bitrix24-mcp</title>
+<style>
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; max-width: 760px;
+         margin: 40px auto; padding: 0 20px; line-height: 1.55; color: #222; }
+  h1 { border-bottom: 2px solid #0080ff; padding-bottom: 8px; }
+  h2 { color: #0066cc; margin-top: 32px; }
+  code { background: #f3f4f6; padding: 2px 6px; border-radius: 3px; font-size: 0.9em; }
+  .meta { color: #666; font-size: 13px; margin-bottom: 32px; }
+  ul li { margin-bottom: 6px; }
+  table { border-collapse: collapse; margin: 12px 0; width: 100%; }
+  th, td { border: 1px solid #ddd; padding: 8px; text-align: left; vertical-align: top; }
+  th { background: #f8f9fa; }
+  a { color: #0080ff; }
+</style>
+</head>
+<body>
+
+<h1>Политика конфиденциальности — bitrix24-mcp</h1>
+<p class="meta">Версия 1.0 · Дата вступления в силу: 27 апреля 2026 · Оператор: ТОО «RCS» (БИН — указан в реквизитах rcs.kz)</p>
+
+<h2>1. Общие положения</h2>
+<p>Настоящая Политика описывает, как сервис <code>bitrix24-mcp</code> (далее — Сервис), разработанный
+ТОО «RCS» (Казахстан, г. Алматы) и опубликованный в Bitrix24 Marketplace, обрабатывает данные
+пользователей. Мы соблюдаем Закон РК № 94-V «О персональных данных и их защите», GDPR (для пользователей ЕС)
+и общие принципы privacy-by-design.</p>
+
+<h2>2. Какие данные мы собираем</h2>
+<table>
+<tr><th>Категория</th><th>Источник</th><th>Назначение</th><th>Срок</th></tr>
+<tr>
+  <td><code>MEMBER_ID</code> портала Bitrix24<br>(32-значный hex)</td>
+  <td>Передаётся Bitrix24 при установке/открытии приложения</td>
+  <td>Идентификация подписки, изоляция данных между порталами</td>
+  <td>До удаления приложения + 90 дней (для возможности восстановления)</td>
+</tr>
+<tr>
+  <td><code>DOMAIN</code> портала<br>(например <i>mycompany.bitrix24.kz</i>)</td>
+  <td>Передаётся Bitrix24 при установке</td>
+  <td>Логирование, поддержка</td>
+  <td>То же</td>
+</tr>
+<tr>
+  <td><code>AUTH_ID</code> и <code>REFRESH_ID</code> токены</td>
+  <td>OAuth2 от Bitrix24</td>
+  <td>Выполнение действий от имени портала по запросу AI-клиента</td>
+  <td>До истечения / до удаления приложения. Не передаются третьим лицам.</td>
+</tr>
+<tr>
+  <td>Email подписчика</td>
+  <td>Lemon Squeezy (платёжный процессор)</td>
+  <td>Доставка лицензионного ключа, биллинговые уведомления</td>
+  <td>Срок подписки + 3 года (требование KZ налогового кодекса)</td>
+</tr>
+<tr>
+  <td>Логи запросов (timestamp, IP, tool name)</td>
+  <td>Cloudflare Worker</td>
+  <td>Защита от abuse, диагностика, биллинг по лимитам</td>
+  <td>30 дней (rotating)</td>
+</tr>
+</table>
+
+<h2>3. Что мы НЕ храним</h2>
+<ul>
+<li>Содержимое CRM-сделок, контактов, задач, документов вашего портала</li>
+<li>Сообщения чатов, файлы, телефонные звонки</li>
+<li>Финансовые документы и реквизиты ваших клиентов</li>
+<li>Личные сообщения сотрудников</li>
+<li>Пароли и API-токены сторонних сервисов</li>
+</ul>
+<p>Все эти данные передаются от Bitrix24 → к AI-клиенту пользователя <strong>напрямую через
+зашифрованный канал</strong>, без сохранения на серверах bitrix24-mcp.</p>
+
+<h2>4. Где хранятся данные</h2>
+<p>Технические идентификаторы (MEMBER_ID, токены, лицензии) хранятся в Cloudflare KV — глобально
+распределённое key-value хранилище. Биллинговые данные — Lemon Squeezy (Merchant of Record,
+PCI-DSS compliant). Email-уведомления отправляются через Resend (домен licenses@rcs.kz, верифицирован).</p>
+
+<h2>5. Передача третьим лицам</h2>
+<p>Мы не передаём ваши данные третьим лицам, кроме случаев:</p>
+<ul>
+<li>Cloudflare (хостинг лицензионного API) — обязательная техническая необходимость, GDPR-compliant</li>
+<li>Lemon Squeezy (биллинг) — обработка платежей, PCI-DSS</li>
+<li>Resend (email-доставка) — отправка ключа лицензии и счетов</li>
+<li>По письменному запросу уполномоченных государственных органов РК</li>
+</ul>
+
+<h2>6. Ваши права</h2>
+<p>Вы имеете право:</p>
+<ul>
+<li>Запросить копию всех данных о вас, которые мы храним (<code>POST</code> запрос на <a href="mailto:privacy@rcs.kz">privacy@rcs.kz</a>)</li>
+<li>Запросить удаление всех данных (право на забвение) — выполняется в течение 30 календарных дней</li>
+<li>Отозвать согласие на обработку — приведёт к деактивации лицензии</li>
+<li>Подать жалобу в Комитет по защите прав потребителей и контролю в области персональных данных РК</li>
+</ul>
+
+<h2>7. Cookies и трекеры</h2>
+<p>На сайте rcs.kz и в iframe-приложении мы НЕ используем рекламные/маркетинговые cookies. Только
+technical session cookies для авторизации в кабинете администратора.</p>
+
+<h2>8. Изменения в Политике</h2>
+<p>Существенные изменения публикуются на этой странице с сохранением версионности. Подписчикам
+направляется уведомление за 30 дней до вступления в силу.</p>
+
+<h2>9. Контакты</h2>
+<p>
+ТОО «RCS» (Казахстан, Алматы)<br>
+Email: <a href="mailto:privacy@rcs.kz">privacy@rcs.kz</a><br>
+Сайт: <a href="https://rcs.kz">rcs.kz</a><br>
+Поддержка: <a href="mailto:support@rcs.kz">support@rcs.kz</a>
+</p>
+
+</body>
+</html>
