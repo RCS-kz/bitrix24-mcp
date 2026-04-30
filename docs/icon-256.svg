@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <!-- bitrix24-mcp icon: B24 brand blue gradient base + chat-bubble + AI spark -->
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0080ff"/>
+      <stop offset="100%" stop-color="#0046a3"/>
+    </linearGradient>
+    <linearGradient id="spark" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fff"/>
+      <stop offset="100%" stop-color="#ffe680"/>
+    </linearGradient>
+    <filter id="soft" x="-10%" y="-10%" width="120%" height="120%">
+      <feGaussianBlur stdDeviation="0.6"/>
+    </filter>
+  </defs>
+
+  <!-- Rounded square background, matches Bitrix24 brand -->
+  <rect x="0" y="0" width="256" height="256" rx="48" ry="48" fill="url(#bg)"/>
+
+  <!-- Subtle inner shine -->
+  <rect x="0" y="0" width="256" height="128" rx="48" ry="48" fill="white" opacity="0.06"/>
+
+  <!-- Chat bubble suggesting CRM/messaging -->
+  <path d="M48 84
+           Q48 64 72 64
+           L184 64
+           Q208 64 208 84
+           L208 160
+           Q208 180 184 180
+           L120 180
+           L92 208
+           L92 180
+           L72 180
+           Q48 180 48 160
+           Z"
+        fill="white" opacity="0.95" filter="url(#soft)"/>
+
+  <!-- AI spark / sparkle inside bubble -->
+  <g transform="translate(128 122)">
+    <!-- 4-point star -->
+    <path d="M0 -36
+             L8 -8
+             L36 0
+             L8 8
+             L0 36
+             L-8 8
+             L-36 0
+             L-8 -8 Z"
+          fill="url(#spark)" stroke="#0080ff" stroke-width="2"/>
+    <!-- small accent dots -->
+    <circle cx="32" cy="-22" r="4" fill="#ffd000"/>
+    <circle cx="-32" cy="22" r="3" fill="#ffd000"/>
+  </g>
+
+  <!-- Bottom accent line: "MCP" subtle -->
+  <text x="128" y="232" text-anchor="middle"
+        font-family="-apple-system, Segoe UI, Roboto, sans-serif"
+        font-size="20" font-weight="700" fill="white" opacity="0.85"
+        letter-spacing="2">
+    MCP
+  </text>
+</svg>
