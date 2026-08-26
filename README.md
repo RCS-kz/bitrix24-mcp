@@ -1,8 +1,8 @@
 # bitrix24-mcp
 
-> **Production-grade MCP server for Bitrix24 Cloud — 45 tools, safe by default.**
+> **Production-grade MCP server for Bitrix24 Cloud — 55 tools, safe by default.**
 >
-> Профессиональный MCP-сервер для Bitrix24 — 45 инструментов, безопасно по умолчанию.
+> Профессиональный MCP-сервер для Bitrix24 — 55 инструментов, безопасно по умолчанию.
 
 [Русский](#-русский)  ·  [English](#-english)  ·  [Install](#install)  ·  [Docs](https://rcs.kz/bitrix24-mcp/docs)  ·  [Buy](https://rcs.kz/bitrix24-mcp/buy)
 
@@ -14,7 +14,7 @@
 
 ### Что это
 
-**bitrix24-mcp** — сервер Model Context Protocol, подключающий Claude Desktop к вашему облачному Bitrix24. Один раз устанавливаете, авторизуете через входящий вебхук Bitrix24 (или OAuth-приложение Bitrix24.Market) — Claude получает **45 инструментов** по CRM (контакты, компании, сделки, лиды, товары), Задачам, Пользователям, Мессенджеру и Календарю.
+**bitrix24-mcp** — сервер Model Context Protocol, подключающий Claude Desktop к вашему облачному Bitrix24. Один раз устанавливаете, авторизуете через входящий вебхук Bitrix24 (или OAuth-приложение Bitrix24.Market) — Claude получает **55 инструментов** по CRM (контакты, компании, сделки, лиды, товары), Задачам, Пользователям, Мессенджеру и Календарю.
 
 Дальше Claude делает то, что умеет лучше всего — рассуждает над неструктурированными запросами вроде «покажи все сделки больше 50 млн ₸ с просроченной датой закрытия в этом квартале, самые крупные три — отправь email менеджерам и поставь задачу на follow-up» — и вызывает REST API Bitrix24 от вашего имени, с вашим подтверждением.
 
@@ -24,7 +24,7 @@
 
 ### Что внутри
 
-**45 инструментов — каждый:**
+**55 инструментов — каждый:**
 
 - **Типобезопасен** — аргументы валидируются через Zod против строгой JSON-схемы до отправки REST-запроса. Некорректный ввод падает локально с понятной ошибкой, а не мусорным ответом API.
 - **Confirm-gated по умолчанию** — деструктивные инструменты (`*_delete`, `*_update` с массовыми селекторами) декларируют `destructive: true` в манифесте. Claude Desktop показывает диалог подтверждения.
@@ -56,13 +56,28 @@
 - Не поддерживает on-premise (коробочный) Bitrix24. Только облако. On-prem — в roadmap, без ETA.
 - Не бесплатный продукт. Мы берём деньги, потому что обновляемся, ведём поддержку и реагируем на изменения REST API Bitrix24 в течение недели. Заброшенный бесплатный инструмент хуже, чем никакой.
 
+### Контроль отдела продаж, а не только доступ к CRM
+
+Типовые ИИ-интеграции с Bitrix24 видят карточки и сделки — и на этом заканчиваются. Разговоры с клиентами остаются за кадром: звонки в телефонии, переписка в открытых линиях, заметки менеджеров в таймлайне. А ответ на вопрос «почему сделка не закрылась» живёт именно там.
+
+- **Звонки** — сколько сделал и принял каждый менеджер, сколько пропустил, длительность, ссылка на запись разговора.
+- **Открытые линии** — WhatsApp, Telegram, чат на сайте: переписка с клиентом целиком и время первого ответа.
+- **Заметки в CRM** — что менеджеры писали по проблемным сделкам, а не только что записано в полях.
+- **Отчёт руководителю** — собрать сводку и отправить её прямо в чат Bitrix24, а не выгружать в файл.
+- Всё это обычными словами, без конструктора отчётов и без разработки.
+
+Для такого доступа нужны права `imopenlines` и `telephony` на стороне портала. Коробочные решения их не запрашивают — поэтому и упираются в потолок на первом же реальном сценарии контроля менеджеров.
+
 ### Цена
 
-- **299 USD / tenant Bitrix24 / год.** Оплата USD, KZT или RUB (ЮKassa / CloudPayments по курсу дня).
-- **14 дней trial**, без карты, без урезанных функций.
-- Per-tenant — неограниченное число пользователей внутри tenant'а.
-- Включает обновления в рамках текущей мажорной версии (1.x).
-- Поддержка: `support@rcs.kz`, SLA 1 рабочий день (Almaty, UTC+5).
+| Тариф | Цена | Что входит |
+|---|---|---|
+| **Solo** | **0 ₸, бессрочно** | 100 вызовов в день · 1 портал · личное использование |
+| **Pro** | **25 900 ₸ / мес** | Без лимита вызовов · 3 портала · коммерческое использование · поддержка за сутки · 14 дней пробного периода |
+
+**Оформить Pro:** [rcs-kz.lemonsqueezy.com](https://rcs-kz.lemonsqueezy.com/checkout/buy/5a8de75c-c2de-449b-b2d0-7bf29552f61a) — оплата через Lemon Squeezy (Merchant of Record, карты РФ и РК проходят). Отмена в один клик.
+
+Внутри тарифа — неограниченное число сотрудников портала. Обновления в рамках текущей мажорной версии включены. Поддержка: `support@rcs.kz`, ответ в течение рабочего дня (Алматы, UTC+5).
 
 ### Требования
 
@@ -75,13 +90,9 @@
 
 **Рекомендуется:** скачать `.mcpb`-бандл с [`rcs.kz/bitrix24-mcp`](https://rcs.kz/bitrix24-mcp) и установить в Claude Desktop одним кликом. Пошаговая инструкция — [`docs/install/claude-desktop.md`](./docs/install/claude-desktop.md).
 
-**Для продвинутых:**
+Бандл самодостаточен: один файл, ставить Node.js и зависимости не нужно, один и тот же артефакт работает на macOS, Windows и Linux. Ссылку вебхука и лицензионный ключ Claude Desktop спрашивает формой — править `claude_desktop_config.json` руками не требуется.
 
-```bash
-npm install -g @rcs-kz/bitrix24-mcp
-```
-
-Конфиг в `claude_desktop_config.json` описан в install-гайде.
+> **Про npm.** В реестре сейчас лежит сборка предыдущего поколения — без инструментов по телефонии и открытым линиям. Публикация 2.1.0 готовится; до неё ставьте `.mcpb`.
 
 ### Поддержка и SLA
 
@@ -103,7 +114,7 @@ npm install -g @rcs-kz/bitrix24-mcp
 
 ### What it is
 
-**bitrix24-mcp** is a Model Context Protocol server that connects Claude Desktop to a Bitrix24 Cloud tenant. Install once, authorise against a Bitrix24 inbound webhook (or Bitrix24.Market OAuth app) — Claude gains **45 tools** spanning CRM (contacts, companies, deals, leads, products), Tasks, Users, Instant Messaging, and Calendar.
+**bitrix24-mcp** is a Model Context Protocol server that connects Claude Desktop to a Bitrix24 Cloud tenant. Install once, authorise against a Bitrix24 inbound webhook (or Bitrix24.Market OAuth app) — Claude gains **55 tools** spanning CRM (contacts, companies, deals, leads, products), Tasks, Users, Instant Messaging, and Calendar.
 
 Claude then does what Claude does best — reasoning over unstructured requests like *"Summarise every deal over 50 M KZT that slipped its close date this quarter, email the three biggest to the account owner, and create a follow-up task for each"* — and calls the Bitrix24 REST API on your behalf, with your approval.
 
@@ -113,7 +124,7 @@ Generic "connect AI to CRM" tools optimise for demo-ability. We optimise for the
 
 ### What's in the box
 
-**45 tools, all of them:**
+**55 tools, all of them:**
 
 - **Type-safe** — every argument validated with Zod against a strict JSON schema before the REST call leaves the machine.
 - **Confirm-gated by default** — destructive tools (`*_delete`, `*_update` with mass-selectors) declare `destructive: true` in the manifest. Compliant clients surface a confirmation dialog.
@@ -144,6 +155,18 @@ Full threat model and 10-attack harness: [`docs/threat-model.md`](./docs/threat-
 - Not a no-code automation tool.
 - Not an on-premise Bitrix24 connector. Cloud tenants only.
 - Not a free tool.
+
+### Sales-floor oversight, not just CRM access
+
+Most AI integrations for Bitrix24 can see records and deals, and stop there. The conversations stay invisible: telephony calls, open-line chats with clients, the notes reps leave on a timeline. That is where the answer to "why did this deal stall" actually lives.
+
+- **Calls** — how many each rep placed and answered, how many were missed, duration, link to the recording.
+- **Open lines** — WhatsApp, Telegram, site widget: the full client conversation and time-to-first-response.
+- **CRM notes** — what reps wrote about stalled deals, not just what the fields say.
+- **Report to the head of sales** — assemble the digest and post it straight into a Bitrix24 chat.
+- All of it in plain language, with no report builder and no development work.
+
+This requires the `imopenlines` and `telephony` scopes on the portal side. Off-the-shelf connectors do not request them — which is why they hit a ceiling on the first real manager-performance scenario.
 
 ### Pricing
 
