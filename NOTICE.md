@@ -1,6 +1,6 @@
 # About this repository
 
-This is the **public front** of [bitrix24-mcp](https://rcs.kz/bitrix24-mcp), a commercial MCP server that connects Claude Desktop to Bitrix24 Cloud.
+This is the **public front** of [bitrix24-mcp](https://rcs.kz/product/mcp-bitrix24), a commercial MCP server that connects Claude Desktop to Bitrix24 Cloud.
 
 ## What lives here
 
@@ -18,12 +18,12 @@ The product is distributed through these channels only:
 
 | Channel | Artifact | Link |
 |---|---|---|
-| Landing | `.mcpb` bundle + docs | <https://rcs.kz/bitrix24-mcp> |
+| rcs.kz (by request) | `.mcpb` bundle + license key | <https://rcs.kz/product/mcp-bitrix24> |
 | npm | `@rcs-kz/bitrix24-mcp` | <https://www.npmjs.com/package/@rcs-kz/bitrix24-mcp> |
 | MCP Registry | Metadata entry | `io.github.rcs-kz/bitrix24-mcp` |
 | Bitrix24.Market | Vendor listing | pending review |
 
-See the [Commercial EULA](https://rcs.kz/bitrix24-mcp/eula) for license terms that apply to the binary.
+See the [Terms of Service](https://rcs-kz.github.io/bitrix24-mcp/terms.html) for license terms that apply to the binary.
 
 ## Why README-only?
 

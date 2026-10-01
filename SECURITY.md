@@ -55,9 +55,9 @@ We do not currently run a paid bounty programme. We do send physical thank-you i
 
 ## In-scope
 
-- The `@rcs-kz/bitrix24-mcp` npm package and the `.mcpb` bundle distributed via <https://rcs.kz/bitrix24-mcp>.
+- The `@rcs-kz/bitrix24-mcp` npm package and the `.mcpb` bundle distributed by request via <https://rcs.kz/product/mcp-bitrix24>.
 - The license verification path against `license.rcs.kz`.
-- The trial-issuance flow at <https://rcs.kz/bitrix24-mcp> (including any signed-token URLs and email links).
+- The demo-key issuance flow at <https://rcs.kz/product/mcp-bitrix24> (including any signed-token URLs and email links).
 - Any documentation in this repository that, if relied upon, could induce insecure configuration.
 
 ## Out of scope

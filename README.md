@@ -4,7 +4,7 @@
 >
 > Профессиональный MCP-сервер для Bitrix24 — 55 инструментов, безопасно по умолчанию.
 
-[Русский](#-русский)  ·  [English](#-english)  ·  [Install](#install)  ·  [Docs](https://rcs.kz/bitrix24-mcp/docs)  ·  [Buy](https://rcs.kz/bitrix24-mcp/buy)
+[Русский](#-русский)  ·  [English](#-english)  ·  [Install](#install)  ·  [Docs](https://rcs.kz/product/mcp-bitrix24)  ·  [Buy](https://rcs.kz/request-promo?utm_source=github&utm_medium=readme&utm_campaign=mcp-b24)
 
 > **This repository is the public front of a commercial product.** It contains the README you're reading, install guides, changelogs, the published threat model, and our security-disclosure policy. **Source code is proprietary** and ships as a signed V8-bytecode bundle through the channels listed under [Install](#install). See [`NOTICE.md`](./NOTICE.md) for the rationale.
 
@@ -72,10 +72,10 @@
 
 | Тариф | Цена | Что входит |
 |---|---|---|
-| **Solo** | **0 ₸, бессрочно** | 100 вызовов в день · 1 портал · личное использование |
-| **Pro** | **25 900 ₸ / мес** | Без лимита вызовов · 3 портала · коммерческое использование · поддержка за сутки · 14 дней пробного периода |
+| **Демо-доступ** | **0 ₸, 14 дней** | Все 55 инструментов · без карты · до заключения договора |
+| **Оплата помесячно** | **от 39 000 ₸ / мес** | Точная сумма — от объёма запросов и количества пользователей команды |
 
-**Оформить Pro:** [rcs-kz.lemonsqueezy.com](https://rcs-kz.lemonsqueezy.com/checkout/buy/5a8de75c-c2de-449b-b2d0-7bf29552f61a) — оплата через Lemon Squeezy (Merchant of Record, карты РФ и РК проходят). Отмена в один клик.
+**Подключить:** [оставить заявку на rcs.kz](https://rcs.kz/request-promo?utm_source=github&utm_medium=readme&utm_campaign=mcp-b24) — пришлём файл `.mcpb` и демо-ключ на 14 дней, после демо-периода — договор и оплата помесячно. Подробно — [rcs.kz/product/mcp-bitrix24](https://rcs.kz/product/mcp-bitrix24).
 
 Внутри тарифа — неограниченное число сотрудников портала. Обновления в рамках текущей мажорной версии включены. Поддержка: `support@rcs.kz`, ответ в течение рабочего дня (Алматы, UTC+5).
 
@@ -88,7 +88,7 @@
 
 ### Установка
 
-**Рекомендуется:** скачать `.mcpb`-бандл с [`rcs.kz/bitrix24-mcp`](https://rcs.kz/bitrix24-mcp) и установить в Claude Desktop одним кликом. Пошаговая инструкция — [`docs/install/claude-desktop.md`](./docs/install/claude-desktop.md).
+**Рекомендуется:** получить `.mcpb`-бандл по [заявке на rcs.kz](https://rcs.kz/request-promo?utm_source=github&utm_medium=readme&utm_campaign=mcp-b24) и установить в Claude Desktop одним кликом. Пошаговая инструкция — [`docs/install/claude-desktop.md`](./docs/install/claude-desktop.md).
 
 Бандл самодостаточен: один файл, ставить Node.js и зависимости не нужно, один и тот же артефакт работает на macOS, Windows и Linux. Ссылку вебхука и лицензионный ключ Claude Desktop спрашивает формой — править `claude_desktop_config.json` руками не требуется.
 
@@ -172,32 +172,22 @@ This requires the `imopenlines` and `telephony` scopes on the portal side. Off-t
 
 | Tier | Price | What you get |
 |---|---|---|
-| **Solo** | **0 ₸ / forever** | 100 calls/day · 1 portal · personal use only |
-| **Pro** | **25 900 ₸/mo** (~$50) | Unlimited · 3 portals · 24h support · commercial use · 14-day trial |
+| **Demo access** | **0 ₸ / 14 days** | All 55 tools · no credit card · before signing a contract |
+| **Monthly** | **from 39 000 ₸/mo** | Exact amount depends on request volume and team size |
 
-**🛒 Direct checkout (Pro):** [rcs-kz.lemonsqueezy.com/checkout/buy/5a8de75c...](https://rcs-kz.lemonsqueezy.com/checkout/buy/5a8de75c-c2de-449b-b2d0-7bf29552f61a)
-
-**🆓 Free Solo activation (5 seconds, no credit card):**
-
-```bash
-curl -X POST https://bitrix24-mcp-license.shahruh.workers.dev/freemium \
-  -H "Content-Type: application/json" \
-  -d '{"email":"you@company.com","product":"bitrix24-mcp"}'
-```
-
-Subscription via [Lemon Squeezy](https://rcs-kz.lemonsqueezy.com) (Merchant of Record — RU/KZ cards work). Cancel anytime in 1 click.
+**Get started:** [request access on rcs.kz](https://rcs.kz/request-promo?utm_source=github&utm_medium=readme&utm_campaign=mcp-b24) — we send the `.mcpb` bundle and a 14-day demo key; after the demo period — a contract and monthly billing. Details: [rcs.kz/product/mcp-bitrix24](https://rcs.kz/product/mcp-bitrix24).
 
 
 ## Links
 
-- **Documentation:** <https://rcs.kz/bitrix24-mcp/docs>
-- **Landing / install:** <https://rcs.kz/bitrix24-mcp>
+- **Documentation:** [`docs/install/claude-desktop.md`](./docs/install/claude-desktop.md)
+- **Product page / request access:** <https://rcs.kz/product/mcp-bitrix24>
 - **Changelog:** [`CHANGELOG.md`](./CHANGELOG.md)
 - **Threat model:** [`docs/threat-model.md`](./docs/threat-model.md)
-- **Privacy & EULA:** <https://rcs.kz/bitrix24-mcp/privacy> · <https://rcs.kz/bitrix24-mcp/eula>
+- **Privacy & Terms:** <https://rcs-kz.github.io/bitrix24-mcp/privacy.html> · <https://rcs-kz.github.io/bitrix24-mcp/terms.html>
 - **npm:** <https://www.npmjs.com/package/@rcs-kz/bitrix24-mcp>
 - **MCP Registry:** `io.github.rcs-kz/bitrix24-mcp`
 
 ## License
 
-This repository is licensed under [CC BY-ND 4.0](./LICENSE) (documentation) — see [`LICENSE`](./LICENSE). The **software itself** (the npm package, `.mcpb` bundle, and all related artifacts) is governed by the [Commercial EULA](https://rcs.kz/bitrix24-mcp/eula); source is proprietary.
+This repository is licensed under [CC BY-ND 4.0](./LICENSE) (documentation) — see [`LICENSE`](./LICENSE). The **software itself** (the npm package, `.mcpb` bundle, and all related artifacts) is governed by the [Terms of Service](https://rcs-kz.github.io/bitrix24-mcp/terms.html); source is proprietary.

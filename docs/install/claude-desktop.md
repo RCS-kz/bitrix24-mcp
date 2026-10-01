@@ -2,9 +2,9 @@
 
 **Для кого:** пользователи Bitrix24 Cloud, которые хотят управлять CRM, задачами и коммуникациями из Claude Desktop (macOS / Windows).
 
-**Что получите:** 45 tools поверх вашего Bitrix24 Cloud — Claude сможет читать сделки, создавать контакты, выставлять задачи, писать в IM и смотреть календарь. Все необратимые действия закрыты confirm-гейтом, санитизация пользовательского ввода, rate-limiter с поддержкой X-RateLimit-Retry-Tables.
+**Что получите:** 55 инструментов поверх вашего Bitrix24 Cloud — Claude сможет читать сделки, создавать контакты, выставлять задачи, писать в IM и смотреть календарь. Все необратимые действия закрыты confirm-гейтом, санитизация пользовательского ввода, rate-limiter с поддержкой X-RateLimit-Retry-Tables.
 
-**Стоимость:** $299 / tenant / год. 14 дней бесплатный trial — без банковской карты. Купить и получить ключ: [rcs.kz/bitrix24-mcp/buy](https://rcs.kz/bitrix24-mcp/buy).
+**Стоимость:** демо-доступ 14 дней бесплатно, без банковской карты; далее — от 39 000 ₸/мес по договору. Получить `.mcpb` и ключ: [заявка на rcs.kz](https://rcs.kz/request-promo?utm_source=github&utm_medium=readme&utm_campaign=mcp-b24).
 
 ---
 
@@ -12,8 +12,8 @@
 
 1. **Claude Desktop** установлен (macOS 12+ или Windows 10+). Скачать: [claude.ai/download](https://claude.ai/download).
 2. **Bitrix24 Cloud tenant** с правами администратора (нужно создать входящий вебхук).
-3. **License key** от `rcs.kz/bitrix24-mcp/buy` — придёт на email сразу после оформления. На trial — ключ активен 14 дней, без call-home ограничений.
-4. **Bitrix24 webhook URL**. Получить так: в своём портале Bitrix24 — `Разработчикам` → `Другое` → `Входящий вебхук` → `Создать вебхук` с правами **`crm, task, im, calendar, user, department`**. Скопировать полный URL вида `https://your-portal.bitrix24.kz/rest/1/abcXYZ123xyz/`.
+3. **License key** — пришлём вместе с `.mcpb` по заявке. Демо-ключ действует 14 дней.
+4. **Bitrix24 webhook URL**. Получить так: в своём портале Bitrix24 — `Разработчикам` → `Другое` → `Входящий вебхук` → `Создать вебхук` с правами **`crm, task, calendar, im, imopenlines, telephony, user, department`**. Скопировать полный URL вида `https://your-portal.bitrix24.kz/rest/1/abcXYZ123xyz/`.
 
 ---
 
@@ -21,7 +21,7 @@
 
 Это одно-кликовая установка через формат MCP Bundle. Подходит для 95% пользователей.
 
-1. Скачайте `bitrix24-mcp-1.0.0.mcpb` с [rcs.kz/bitrix24-mcp/download](https://rcs.kz/bitrix24-mcp/download).
+1. Получите файл `.mcpb` по [заявке на rcs.kz](https://rcs.kz/request-promo?utm_source=github&utm_medium=readme&utm_campaign=mcp-b24).
 2. Откройте Claude Desktop → `Settings` → `Extensions` → `Install Extension` → укажите скачанный `.mcpb`. На macOS файл можно открыть двойным кликом — Claude Desktop подхватит его автоматически.
 3. В диалоге конфигурации введите:
    - **Bitrix24 webhook URL** — из шага 4 выше (поле помечено как sensitive, хранится в OS keychain).
@@ -78,8 +78,8 @@
 
 ## Типичные проблемы
 
-- **«401 Unauthorized» при первом вызове.** Webhook URL неверен или истёк. Перевыпустите вебхук в Bitrix24 с правами `crm, task, im, calendar, user, department`.
-- **«License expired».** Обновите подписку на `rcs.kz/bitrix24-mcp/billing`. В offline-режиме grace period 14 дней до блокировки tools.
+- **«401 Unauthorized» при первом вызове.** Webhook URL неверен или истёк. Перевыпустите вебхук в Bitrix24 с правами `crm, task, calendar, im, imopenlines, telephony, user, department`.
+- **«License expired».** Напишите на `support@rcs.kz` — продлим ключ по договору. В offline-режиме grace period 14 дней до блокировки tools.
 - **Tools не появляются после установки `.mcpb`.** Проверьте, что Claude Desktop именно **перезапущен** (`Cmd+Q`, не окно закрыто). На Windows — убедитесь, что `Claude.exe` вышел из трея.
 - **Rate limit hit.** Мы соблюдаем Bitrix24 ограничения автоматически через `X-RateLimit-Retry-Tables`. Если видите ошибку — откройте в логах `mcp-server-bitrix24.log` секцию `rate-limiter` — бывает, что ваш tenant на `free` плане имеет жёсткий лимит 2 qps.
 
@@ -97,6 +97,6 @@
 ## Поддержка
 
 - Email: `support@rcs.kz` (SLA: ответ в течение 1 рабочего дня; P1 — 2 часа)
-- Docs: [rcs.kz/bitrix24-mcp/docs](https://rcs.kz/bitrix24-mcp/docs)
+- Страница продукта: [rcs.kz/product/mcp-bitrix24](https://rcs.kz/product/mcp-bitrix24)
 - Пакет в npm: [@rcs-kz/bitrix24-mcp](https://www.npmjs.com/package/@rcs-kz/bitrix24-mcp) (публичный метадата-листинг; install с license key).
 - MCP Registry: `io.github.rcs-kz/bitrix24-mcp` на [modelcontextprotocol.io](https://modelcontextprotocol.io).
