@@ -44,7 +44,7 @@ V8 bytecode is not a security boundary against string extraction — UTF-8 liter
 ## What we don't claim to defend against
 
 - **Full root on the customer's machine.** An attacker with root can hook `openat()`, patch libcrypto, or simply invoke Bitrix24's REST API directly with the customer's token. We're the wrong layer of defence for this. Ops teams should manage endpoint security separately.
-- **Social engineering of the customer into running a malicious "patched" build.** We publish checksums and signatures at <https://rcs.kz/bitrix24-mcp>; customers who install from other sources assume that risk.
+- **Social engineering of the customer into running a malicious "patched" build.** The bundle is issued only by RCS on request via <https://rcs.kz/product/mcp-bitrix24>; customers who install from other sources assume that risk.
 - **Denial of service against the customer's Bitrix24 tenant.** Our rate limiter prevents *us* from DDoS-ing the tenant, but a customer deliberately misusing Claude prompts to trigger excessive load is a customer-side policy matter.
 - **Exfiltration of CRM data via Claude's context.** Claude sees only what the tool returns. If a customer's prompt causes Claude to surface sensitive CRM data in chat, that is a DLP question about how Claude Desktop / Claude enterprise policies are configured — not a bitrix24-mcp issue.
 
