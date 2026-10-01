@@ -4,9 +4,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>bitrix24-mcp — Bitrix24 API agent for Claude, Cursor, and MCP-compatible AI</title>
-  <meta name="description" content="Expose 45+ Bitrix24 CRM and workflow tools to any MCP-compatible LLM. 14-day free trial.">
+  <meta name="description" content="55 MCP tools for Bitrix24 Cloud: CRM, tasks, calendar, chats, open lines, telephony. For Claude Desktop. 14-day demo, then from 39 000 KZT/month.">
   <meta property="og:title" content="bitrix24-mcp — Bitrix24 API agent for Claude and MCP clients">
-  <meta property="og:description" content="45+ tools · CRM · deals · leads · tasks · workflow · BI. One npm install away.">
+  <meta property="og:description" content="55 tools · CRM · tasks · calendar · chats · open lines · telephony. One .mcpb file for Claude Desktop.">
   <meta property="og:type" content="website">
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
@@ -16,13 +16,7 @@
 </head>
 <body class="bg-white text-slate-900">
 
-<!-- CONFIG — replace the values below from wrangler.toml + LS dashboard -->
-<script>
-window.BITRIX24_MCP_CFG = {
-  WORKER_ORIGIN: "https://bitrix24-mcp-license.shahruh.workers.dev",
-  BUY_URL: "https://rcs-kz.lemonsqueezy.com/checkout/buy/5a8de75c-c2de-449b-b2d0-7bf29552f61a"
-};
-</script>
+<!-- Подключение и оплата — заявкой на rcs.kz (решение 01.10.2026); Lemon Squeezy не используется. -->
 
 <header class="border-b border-slate-200">
   <div class="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
@@ -34,7 +28,7 @@ window.BITRIX24_MCP_CFG = {
       <a href="#features" class="hover:text-slate-600">Features</a>
       <a href="#install" class="hover:text-slate-600">Install</a>
       <a href="https://github.com/rcs-kz/bitrix24-mcp" class="hover:text-slate-600">GitHub</a>
-      <a href="trial.html" class="px-3 py-1.5 rounded-lg border border-slate-300 hover:bg-slate-50 text-sm">Start trial</a>
+      <a href="https://rcs.kz/request-promo?utm_source=github&utm_medium=pages&utm_campaign=mcp-b24" class="px-3 py-1.5 rounded-lg border border-slate-300 hover:bg-slate-50 text-sm">Request demo</a>
     </nav>
   </div>
 </header>
@@ -42,20 +36,20 @@ window.BITRIX24_MCP_CFG = {
 <section class="max-w-5xl mx-auto px-6 py-20 text-center">
   <h1 class="text-5xl font-bold tracking-tight">Bitrix24 for your AI agent.</h1>
   <p class="mt-4 text-lg text-slate-600 max-w-2xl mx-auto">
-    45+ read/write tools for Bitrix24 CRM, deals, leads, tasks, and workflows —
-    ready for Claude Desktop, Cursor, Claude Code, or any MCP-compatible client.
+    55 tools for Bitrix24 Cloud — CRM, tasks, calendar, chats, open lines, telephony —
+    for Claude Desktop, installed as a single <code>.mcpb</code> file.
   </p>
   <div class="mt-10 flex items-center justify-center gap-4 flex-wrap">
-    <a href="trial.html"
+    <a href="https://rcs.kz/request-promo?utm_source=github&utm_medium=pages&utm_campaign=mcp-b24"
        class="px-6 py-3 rounded-lg bg-slate-900 text-white font-medium hover:bg-slate-800">
-      Start 14-day free trial
+      Get .mcpb and a 14-day demo key
     </a>
-    <a id="buyBtn" href="#"
+    <a href="https://rcs.kz/product/mcp-bitrix24"
        class="px-6 py-3 rounded-lg border border-slate-300 hover:bg-slate-50 font-medium">
-      Buy subscription →
+      Pricing: from 39 000 ₸/mo →
     </a>
   </div>
-  <p class="mt-4 text-xs text-slate-500">No credit card for trial · Cancel anytime · KZ-based company</p>
+  <p class="mt-4 text-xs text-slate-500">14-day demo · no credit card · then monthly billing under contract · Kazakhstan</p>
 </section>
 
 <section id="features" class="bg-slate-50 py-20">
@@ -63,42 +57,44 @@ window.BITRIX24_MCP_CFG = {
     <h2 class="text-3xl font-bold text-center">What's inside</h2>
     <div class="mt-12 grid md:grid-cols-3 gap-6">
       <div class="p-6 bg-white rounded-xl border border-slate-200">
-        <h3 class="font-semibold text-lg">CRM (18 tools)</h3>
-        <p class="mt-2 text-sm text-slate-600">List, create, update deals, leads, contacts, companies; move through pipelines; attach activities.</p>
+        <h3 class="font-semibold text-lg">CRM (30 tools)</h3>
+        <p class="mt-2 text-sm text-slate-600">Leads, deals, contacts, companies, products, activities and timeline comments.</p>
       </div>
       <div class="p-6 bg-white rounded-xl border border-slate-200">
-        <h3 class="font-semibold text-lg">Tasks & Projects (14 tools)</h3>
-        <p class="mt-2 text-sm text-slate-600">Assign, comment, change stage, track time, manage subtasks and dependencies.</p>
+        <h3 class="font-semibold text-lg">Tasks (8 tools)</h3>
+        <p class="mt-2 text-sm text-slate-600">Create, update, comment, complete, delegate.</p>
       </div>
       <div class="p-6 bg-white rounded-xl border border-slate-200">
-        <h3 class="font-semibold text-lg">Workflow & BI (13 tools)</h3>
-        <p class="mt-2 text-sm text-slate-600">Trigger business processes, read dashboards, query activity streams, moderate users.</p>
+        <h3 class="font-semibold text-lg">Chats &amp; open lines (7 tools)</h3>
+        <p class="mt-2 text-sm text-slate-600">Messages, notifications, dialog history.</p>
+      </div>
+      <div class="p-6 bg-white rounded-xl border border-slate-200">
+        <h3 class="font-semibold text-lg">Users &amp; departments (3 tools)</h3>
+        <p class="mt-2 text-sm text-slate-600">Find employees, company structure.</p>
+      </div>
+      <div class="p-6 bg-white rounded-xl border border-slate-200">
+        <h3 class="font-semibold text-lg">Calendar (2) · Telephony (1)</h3>
+        <p class="mt-2 text-sm text-slate-600">Events; call statistics.</p>
+      </div>
+      <div class="p-6 bg-white rounded-xl border border-slate-200">
+        <h3 class="font-semibold text-lg">Utility (4 tools)</h3>
+        <p class="mt-2 text-sm text-slate-600">Batch call up to 50 operations, fields, app info.</p>
       </div>
     </div>
   </div>
 </section>
 
 <section id="install" class="max-w-3xl mx-auto px-6 py-20">
-  <h2 class="text-3xl font-bold">Install in 30 seconds</h2>
+  <h2 class="text-3xl font-bold">How to connect</h2>
   <ol class="mt-8 space-y-6 text-slate-700">
-    <li>
-      <p class="font-semibold">1. Install from npm</p>
-      <pre class="mt-2 bg-slate-900 text-slate-100 p-4 rounded-lg text-sm overflow-x-auto">npm i -g @rcs-kz/bitrix24-mcp</pre>
-    </li>
-    <li>
-      <p class="font-semibold">2. Get your Bitrix24 webhook URL</p>
-      <p class="text-sm mt-1 text-slate-600">Developer resources → Other → Inbound webhook → copy URL.</p>
-    </li>
-    <li>
-      <p class="font-semibold">3. Export your credentials</p>
-      <pre class="mt-2 bg-slate-900 text-slate-100 p-4 rounded-lg text-sm overflow-x-auto">export B24_WEBHOOK_URL="https://your.bitrix24.kz/rest/1/abc.../"
-export RCS_LICENSE_KEY="eyJ..."</pre>
-    </li>
-    <li>
-      <p class="font-semibold">4. Point your MCP client at it</p>
-      <pre class="mt-2 bg-slate-900 text-slate-100 p-4 rounded-lg text-sm overflow-x-auto">claude mcp add bitrix24 -- npx -y @rcs-kz/bitrix24-mcp</pre>
-    </li>
+    <li><p class="font-semibold">1. Request access</p>
+      <p class="text-sm mt-1 text-slate-600"><a class="underline" href="https://rcs.kz/request-promo?utm_source=github&utm_medium=pages&utm_campaign=mcp-b24">Leave a request on rcs.kz</a> — we send the <code>.mcpb</code> file and a 14-day demo key.</p></li>
+    <li><p class="font-semibold">2. Create an inbound webhook in Bitrix24</p>
+      <p class="text-sm mt-1 text-slate-600">As an administrator, with scopes: crm, task, calendar, im, imopenlines, telephony, user, department.</p></li>
+    <li><p class="font-semibold">3. Open the .mcpb in Claude Desktop</p>
+      <p class="text-sm mt-1 text-slate-600">The install form asks for the webhook URL and the key. No Node.js needed. Manual setup instead of .mcpb — variables <code>BITRIX24_AUTH_MODE=webhook</code>, <code>BITRIX24_WEBHOOK_URL</code>, <code>BITRIX24_LICENSE</code>.</p></li>
   </ol>
+  <p class="mt-8 text-sm text-slate-600">Details and pricing: <a class="underline" href="https://rcs.kz/product/mcp-bitrix24">rcs.kz/product/mcp-bitrix24</a> · <a class="underline" href="terms.html">Terms</a> · <a class="underline" href="privacy.html">Privacy</a></p>
 </section>
 
 <footer class="border-t border-slate-200">
@@ -112,8 +108,5 @@ export RCS_LICENSE_KEY="eyJ..."</pre>
   </div>
 </footer>
 
-<script>
-  document.getElementById('buyBtn').href = window.BITRIX24_MCP_CFG.BUY_URL;
-</script>
 </body>
 </html>
