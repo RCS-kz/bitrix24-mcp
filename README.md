@@ -4,7 +4,7 @@
 >
 > Профессиональный MCP-сервер для Bitrix24 — 55 инструментов, безопасно по умолчанию.
 
-[Русский](#-русский)  ·  [English](#-english)  ·  [Install](#install)  ·  [Docs](https://rcs.kz/product/mcp-bitrix24)  ·  [Buy](https://rcs.kz/request-promo?utm_source=github&utm_medium=readme&utm_campaign=mcp-b24)
+[Русский](#-русский)  ·  [English](#-english)  ·  [Install](#install)  ·  [Docs](https://rcs.kz/product/mcp-bitrix24)  ·  [Buy](https://rcs.kz/contacts?utm_source=github&utm_medium=readme&utm_campaign=mcp-b24)
 
 > **This repository is the public front of a commercial product.** It contains the README you're reading, install guides, changelogs, the published threat model, and our security-disclosure policy. **Source code is proprietary** and ships as a signed V8-bytecode bundle through the channels listed under [Install](#install). See [`NOTICE.md`](./NOTICE.md) for the rationale.
 
@@ -72,10 +72,10 @@
 
 | Тариф | Цена | Что входит |
 |---|---|---|
-| **Демо-доступ** | **0 ₸, 14 дней** | Все 55 инструментов · без карты · до заключения договора |
-| **Оплата помесячно** | **от 39 000 ₸ / мес** | Точная сумма — от объёма запросов и количества пользователей команды |
+| **Пробный период** | **по заявке** | Все 55 инструментов · без карты · бесплатного тарифа нет |
+| **Оплата помесячно** | **29 900 ₸ / мес** | С НДС, по договору |
 
-**Подключить:** [оставить заявку на rcs.kz](https://rcs.kz/request-promo?utm_source=github&utm_medium=readme&utm_campaign=mcp-b24) — пришлём файл `.mcpb` и демо-ключ на 14 дней, после демо-периода — договор и оплата помесячно. Подробно — [rcs.kz/product/mcp-bitrix24](https://rcs.kz/product/mcp-bitrix24).
+**Подключить:** [оставить заявку на rcs.kz](https://rcs.kz/contacts?utm_source=github&utm_medium=readme&utm_campaign=mcp-b24) — пришлём файл `.mcpb` и ключ на пробный период, после пробного периода — договор и оплата помесячно. Подробно — [rcs.kz/product/mcp-bitrix24](https://rcs.kz/product/mcp-bitrix24).
 
 Внутри тарифа — неограниченное число сотрудников портала. Обновления в рамках текущей мажорной версии включены. Поддержка: `support@rcs.kz`, ответ в течение рабочего дня (Алматы, UTC+5).
 
@@ -88,7 +88,7 @@
 
 ### Установка
 
-**Рекомендуется:** получить `.mcpb`-бандл по [заявке на rcs.kz](https://rcs.kz/request-promo?utm_source=github&utm_medium=readme&utm_campaign=mcp-b24) и установить в Claude Desktop одним кликом. Пошаговая инструкция — [`docs/install/claude-desktop.md`](./docs/install/claude-desktop.md).
+**Рекомендуется:** получить `.mcpb`-бандл по [заявке на rcs.kz](https://rcs.kz/contacts?utm_source=github&utm_medium=readme&utm_campaign=mcp-b24) и установить в Claude Desktop одним кликом. Пошаговая инструкция — [`docs/install/claude-desktop.md`](./docs/install/claude-desktop.md).
 
 Бандл самодостаточен: один файл, ставить Node.js и зависимости не нужно, один и тот же артефакт работает на macOS, Windows и Linux. Ссылку вебхука и лицензионный ключ Claude Desktop спрашивает формой — править `claude_desktop_config.json` руками не требуется.
 
@@ -172,10 +172,10 @@ This requires the `imopenlines` and `telephony` scopes on the portal side. Off-t
 
 | Tier | Price | What you get |
 |---|---|---|
-| **Demo access** | **0 ₸ / 14 days** | All 55 tools · no credit card · before signing a contract |
-| **Monthly** | **from 39 000 ₸/mo** | Exact amount depends on request volume and team size |
+| **Trial period** | **on request** | All 55 tools · no credit card · there is no free plan |
+| **Monthly** | **29 900 ₸/mo** | VAT included, under contract |
 
-**Get started:** [request access on rcs.kz](https://rcs.kz/request-promo?utm_source=github&utm_medium=readme&utm_campaign=mcp-b24) — we send the `.mcpb` bundle and a 14-day demo key; after the demo period — a contract and monthly billing. Details: [rcs.kz/product/mcp-bitrix24](https://rcs.kz/product/mcp-bitrix24).
+**Get started:** [request access on rcs.kz](https://rcs.kz/contacts?utm_source=github&utm_medium=readme&utm_campaign=mcp-b24) — we send the `.mcpb` bundle and a trial key; after the trial period — a contract and monthly billing. Details: [rcs.kz/product/mcp-bitrix24](https://rcs.kz/product/mcp-bitrix24).
 
 
 ## Links

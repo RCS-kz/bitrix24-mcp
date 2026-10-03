@@ -4,7 +4,7 @@
 
 **Что получите:** 55 инструментов поверх вашего Bitrix24 Cloud — Claude сможет читать сделки, создавать контакты, выставлять задачи, писать в IM и смотреть календарь. Все необратимые действия закрыты confirm-гейтом, санитизация пользовательского ввода, rate-limiter с поддержкой X-RateLimit-Retry-Tables.
 
-**Стоимость:** демо-доступ 14 дней бесплатно, без банковской карты; далее — от 39 000 ₸/мес по договору. Получить `.mcpb` и ключ: [заявка на rcs.kz](https://rcs.kz/request-promo?utm_source=github&utm_medium=readme&utm_campaign=mcp-b24).
+**Стоимость:** пробный период по заявке, без банковской карты; далее — 29 900 ₸/мес (с НДС) по договору. Бесплатного тарифа нет. Получить `.mcpb` и ключ: [заявка на rcs.kz](https://rcs.kz/contacts?utm_source=github&utm_medium=readme&utm_campaign=mcp-b24).
 
 ---
 
@@ -12,7 +12,7 @@
 
 1. **Claude Desktop** установлен (macOS 12+ или Windows 10+). Скачать: [claude.ai/download](https://claude.ai/download).
 2. **Bitrix24 Cloud tenant** с правами администратора (нужно создать входящий вебхук).
-3. **License key** — пришлём вместе с `.mcpb` по заявке. Демо-ключ действует 14 дней.
+3. **License key** — пришлём вместе с `.mcpb` по заявке. Ключ на пробный период — по заявке.
 4. **Bitrix24 webhook URL**. Получить так: в своём портале Bitrix24 — `Разработчикам` → `Другое` → `Входящий вебхук` → `Создать вебхук` с правами **`crm, task, calendar, im, imopenlines, telephony, user, department`**. Скопировать полный URL вида `https://your-portal.bitrix24.kz/rest/1/abcXYZ123xyz/`.
 
 ---
@@ -21,7 +21,7 @@
 
 Это одно-кликовая установка через формат MCP Bundle. Подходит для 95% пользователей.
 
-1. Получите файл `.mcpb` по [заявке на rcs.kz](https://rcs.kz/request-promo?utm_source=github&utm_medium=readme&utm_campaign=mcp-b24).
+1. Получите файл `.mcpb` по [заявке на rcs.kz](https://rcs.kz/contacts?utm_source=github&utm_medium=readme&utm_campaign=mcp-b24).
 2. Откройте Claude Desktop → `Settings` → `Extensions` → `Install Extension` → укажите скачанный `.mcpb`. На macOS файл можно открыть двойным кликом — Claude Desktop подхватит его автоматически.
 3. В диалоге конфигурации введите:
    - **Bitrix24 webhook URL** — из шага 4 выше (поле помечено как sensitive, хранится в OS keychain).

@@ -26,7 +26,7 @@
         },
         {
           "name": "RCS_LICENSE_KEY",
-          "description": "Commercial license key issued after the 14-day trial. Stored in the OS keychain on first run; env var fallback only needed for CI / headless deployments.",
+          "description": "Commercial license key issued after the trial period. Stored in the OS keychain on first run; env var fallback only needed for CI / headless deployments.",
           "isRequired": false,
           "isSecret": true
         }
