@@ -1,193 +1,113 @@
-# bitrix24-mcp
+# bitrix24-mcp — MCP-сервер для Битрикс24
 
-> **Production-grade MCP server for Bitrix24 Cloud — 55 tools, safe by default.**
->
-> Профессиональный MCP-сервер для Bitrix24 — 55 инструментов, безопасно по умолчанию.
+[Русский](#русский) · [English](#english) · [rcs.kz/product/mcp-bitrix24](https://rcs.kz/product/mcp-bitrix24) · [Облачный коннектор](https://rcs.kz/product/oblachnyj-mcp)
 
-[Русский](#-русский)  ·  [English](#-english)  ·  [Install](#install)  ·  [Docs](https://rcs.kz/product/mcp-bitrix24)  ·  [Buy](https://rcs.kz/contacts?utm_source=github&utm_medium=readme&utm_campaign=mcp-b24)
+> Это публичная витрина коммерческого продукта: README, инструкции, журнал изменений, модель угроз. Исходный код закрыт; сборки выдаём по заявке.
 
-> **This repository is the public front of a commercial product.** It contains the README you're reading, install guides, changelogs, the published threat model, and our security-disclosure policy. **Source code is proprietary** and ships as a signed V8-bytecode bundle through the channels listed under [Install](#install). See [`NOTICE.md`](./NOTICE.md) for the rationale.
+## Русский
 
----
+**Что это.** bitrix24-mcp подключает Claude к облачному Битрикс24: ИИ работает с лидами, сделками, задачами, чатами, открытыми линиями и статистикой звонков, а удаление и массовые изменения делает только после вашего подтверждения.
 
-## 🇷🇺 Русский
+### Два способа подключения
 
-### Что это
+| | Облачный коннектор | Локальная версия |
+|---|---|---|
+| Где работает | claude.ai в браузере, приложение Claude на телефоне, Claude Desktop | Claude Desktop на одном компьютере |
+| Что поставить | ничего: коннектор добавляется в Claude по адресу | файл `.mcpb` |
+| Доступ к Битрикс24 | каждый сотрудник входит своим логином Битрикс24 и видит только то, что ему разрешено в портале | один входящий вебхук администратора |
+| Обновления | мы, на своём сервере | вы |
+| Цена | та же, за облако доплаты нет | |
 
-**bitrix24-mcp** — сервер Model Context Protocol, подключающий Claude Desktop к вашему облачному Bitrix24. Один раз устанавливаете, авторизуете через входящий вебхук Bitrix24 (или OAuth-приложение Bitrix24.Market) — Claude получает **55 инструментов** по CRM (контакты, компании, сделки, лиды, товары), Задачам, Пользователям, Мессенджеру и Календарю.
+**Облако — 3 шага:**
+1. Оставляете [заявку](https://rcs.kz/product/oblachnyj-mcp) — мы заводим ваш портал и присылаем инструкцию.
+2. Администратор Битрикс24 ставит приложение в портале и вставляет его ключи по одноразовой ссылке.
+3. Коннектор один раз добавляется в Claude по выданному адресу вида `https://b24-mcp.rcs.kz/t/<код-портала>/mcp` (в Claude Team это делает владелец организации — сразу для всех); каждый сотрудник нажимает «Подключить» и входит своим логином Битрикс24.
 
-Дальше Claude делает то, что умеет лучше всего — рассуждает над неструктурированными запросами вроде «покажи все сделки больше 50 млн ₸ с просроченной датой закрытия в этом квартале, самые крупные три — отправь email менеджерам и поставь задачу на follow-up» — и вызывает REST API Bitrix24 от вашего имени, с вашим подтверждением.
+Claude Code: `claude mcp add --transport http bitrix24 https://b24-mcp.rcs.kz/t/<код-портала>/mcp`
 
-### Почему это существует
+**Локально — 3 шага:**
+1. Оставляете [заявку](https://rcs.kz/product/mcp-bitrix24) — присылаем файл `.mcpb` и ключ на пробный период.
+2. В Битрикс24 под администратором создаёте входящий вебхук с правами `crm, task, calendar, im, imopenlines, telephony, user, department`.
+3. Открываете `.mcpb` в Claude Desktop — форма спросит адрес вебхука и ключ. Node.js ставить не нужно.
 
-Типовые «ИИ-интеграции с CRM» оптимизируют под демо. Мы оптимизируем под тот вечер, когда вы показали это CEO и он сказал «отлично, теперь запусти на реальном tenant'е». Именно здесь rate-лимиты, аудит-логи, обработка ошибок записи и гигиена токенов решают, останется продукт в вашем стеке или нет.
+### Что можно поручить
+
+| Кто | Запрос |
+|---|---|
+| Руководитель отдела продаж | «Сколько звонков сделал и пропустил каждый менеджер на этой неделе? У кого больше всего пропущенных?» |
+| РОП | «Покажи переписку в открытых линиях по сделке … и сколько клиент ждал первого ответа» |
+| РОП | «Почему зависли сделки на стадии "КП отправлено" больше 14 дней? Что менеджеры писали в таймлайне?» |
+| Директор | «Откуда на самом деле приходят продажи? Разбери лиды с 1 августа по каналам» |
+| Менеджер | «Создай лид с email …, свяжи с компанией …, поставь задачу ответственному на завтра» — Claude попросит подтверждение |
+| Руководитель | «Собери сводку по воронке за неделю и отправь её в чат отдела продаж» |
 
 ### Что внутри
 
-**55 инструментов — каждый:**
-
-- **Типобезопасен** — аргументы валидируются через Zod против строгой JSON-схемы до отправки REST-запроса. Некорректный ввод падает локально с понятной ошибкой, а не мусорным ответом API.
-- **Confirm-gated по умолчанию** — деструктивные инструменты (`*_delete`, `*_update` с массовыми селекторами) декларируют `destructive: true` в манифесте. Claude Desktop показывает диалог подтверждения.
-- **Ограничен по частоте** — per-tenant, per-user, per-tool. Массовые операции становятся в очередь с backpressure, а не DDoS-ят ваш Bitrix24.
-- **Записывается в аудит-лог** — каждый вызов — JSON-строка в `~/.bitrix24-mcp/audit.log` (timestamp, инструмент, пользователь, rate-limit remaining, длительность, результат). Локально, права `-rw-------`.
-
-**Покрытие:** CRM (контакты / компании / сделки / лиды / товары / активности + cross-type поиск), Задачи (create / assign / stage / comment / attach / time-log), Пользователи (list / get / by-department), IM (chat / DM / recent), Календарь (list / CRUD / respond). Полный справочник — `docs/TOOLS.md` на landing'е после установки.
+- **CRM:** лиды, сделки, контакты, компании, смарт-процессы, дела, комментарии таймлайна, воронки и стадии.
+- **Звонки и переписка:** статистика телефонии, дела-звонки и расшифровки, открытые линии (WhatsApp, Telegram, чат на сайте — что подключено в портале), чаты и уведомления.
+- **Задачи, календарь, сотрудники и отделы.**
+- Локальная версия 2.3.0 — 61 инструмент. В облаке — 64 инструмента Битрикс24 (плюс Диск, рабочие группы и Новости — только чтение); пакетный вызов и произвольные методы REST в облаке выключены.
+- В облаке администратор может дать сотруднику узкий профиль инструментов (CRM, задачи, связь, только реклама) — меньше лишнего в контексте модели. Права в Битрикс24 это не расширяет.
 
 ### Безопасность
 
-- **Webhook / OAuth токены — в keychain ОС** (macOS Keychain, Windows Credential Manager, Linux libsecret через `keytar`). Никогда в конфиг-файле, env или логах.
-- **Zero telemetry.** Не собираем метрики использования, stack traces, call patterns. Отключать нечего — ничего и не собирается.
-- **Декларированный egress.** Два хоста видны firewall: `*.bitrix24.kz` / `*.bitrix24.ru` / `*.bitrix24.com` (ваш tenant) и `license.rcs.kz` (валидация лицензии раз в 24 ч, fail-open после 14-дневного grace).
-- **Целостность бандла.** Продакшен-бандл — V8-bytecode с SHA-256 fingerprint'ом, проверяемым из 5 независимых check-points. Попытка модификации даёт явный fail.
-- **Лицензии на ECDSA P-256.** Подпись над tenant-scoped bundle hash + expiry. Украденная лицензия не переносится на другой tenant, срок без приватного ключа RCS не продлевается.
+- Удаление и массовые изменения — только с подтверждением.
+- Облако: сотрудник работает со своими правами Битрикс24; отключили его в портале — доступ из Claude пропадает на следующем запросе. Содержимое CRM на диск нашего сервера не записывается: запросы идут к вашему порталу от имени сотрудника.
+- Локально: вебхук и ключ вводятся в форму Claude Desktop (поля помечены как секретные); лицензия проверяется на license.rcs.kz.
+- Работает только с облачным Битрикс24 (коробочная версия не поддерживается).
+- Модель угроз — [`docs/threat-model.md`](./docs/threat-model.md), уязвимости — [`SECURITY.md`](./SECURITY.md).
 
-Модель угроз и 10-attack harness — [`docs/threat-model.md`](./docs/threat-model.md) (synced с `tests/phase4-7/ATTACK-REPORT.md` каждый релиз).
+### Чем отличаемся (честно)
 
-### Для кого
+**Официальный MCP Битрикс24.** У вендора есть свой MCP-сервер для управления порталом из внешних ИИ-систем (ChatGPT, Yandex AI Studio, Cursor, n8n и др.): действия по команде сотрудника и с учётом его прав. По справке Битрикс24 (обновлена 12.10.2026) внешние интеграции по MCP доступны по подписке «BitrixGPT + Маркетплейс»; внутри портала агент BitrixGPT работает с инструментами бесплатно в рамках базового лимита. Отдельный b24-dev-mcp отдаёт только документацию REST API для разработчиков и к данным портала доступа не имеет.
+Если у вас уже есть эта подписка и нужны CRM и задачи — начните с официального сервера: его поддерживает сам вендор.
 
-- **Клиенты Bitrix24** на Claude Pro / Team / Enterprise, которым надоело переключаться между чатом Claude и CRM.
-- **Клиенты RCS** (1С:франчайзинг Казахстан) — единый поставщик автоматизаций Bitrix24 поверх уже работающих интеграций 1С.
-- **IT / Ops команды**, которым нужно согласовать AI-CRM интеграцию и получить внятные ответы про хранение токенов, аудит и rate-лимиты.
+Наш коннектор выбирают, когда нужно:
+- **контроль отдела продаж**: звонки, расшифровки, открытые линии, время первого ответа, сводка в чат — в одном диалоге;
+- **связка с рекламой и 1С**: Яндекс Директ, VK Реклама и Roistat в том же облачном коннекторе ([rcs-ads-mcp](https://rcs.kz/product/rcs-ads-mcp)), учёт — через [mcp-1c](https://github.com/RCS-kz/mcp-1c);
+- **внедрение и поддержка партнёром** в Казахстане, договор и оплата в тенге.
 
-### Чем это НЕ является
+Состав инструментов официального сервера построчно мы не сравнивали — перед выбором сверьте его список с нашим.
 
-- Не чат-виджет в Bitrix24. Claude живёт в Claude Desktop (или любом MCP-совместимом клиенте).
-- Не no-code автоматизация. Для визуальных workflow — встроенные автоматизации Bitrix24.
-- Не поддерживает on-premise (коробочный) Bitrix24. Только облако. On-prem — в roadmap, без ETA.
-- Не бесплатный продукт. Мы берём деньги, потому что обновляемся, ведём поддержку и реагируем на изменения REST API Bitrix24 в течение недели. Заброшенный бесплатный инструмент хуже, чем никакой.
+### Цены
 
-### Контроль отдела продаж, а не только доступ к CRM
-
-Типовые ИИ-интеграции с Bitrix24 видят карточки и сделки — и на этом заканчиваются. Разговоры с клиентами остаются за кадром: звонки в телефонии, переписка в открытых линиях, заметки менеджеров в таймлайне. А ответ на вопрос «почему сделка не закрылась» живёт именно там.
-
-- **Звонки** — сколько сделал и принял каждый менеджер, сколько пропустил, длительность, ссылка на запись разговора.
-- **Открытые линии** — WhatsApp, Telegram, чат на сайте: переписка с клиентом целиком и время первого ответа.
-- **Заметки в CRM** — что менеджеры писали по проблемным сделкам, а не только что записано в полях.
-- **Отчёт руководителю** — собрать сводку и отправить её прямо в чат Bitrix24, а не выгружать в файл.
-- Всё это обычными словами, без конструктора отчётов и без разработки.
-
-Для такого доступа нужны права `imopenlines` и `telephony` на стороне портала. Коробочные решения их не запрашивают — поэтому и упираются в потолок на первом же реальном сценарии контроля менеджеров.
-
-### Цена
-
-| Тариф | Цена | Что входит |
+| Пакет | Казахстан, с НДС 16 % | РФ, по инвойсу |
 |---|---|---|
-| **Пробный период** | **по заявке** | Все 55 инструментов · без карты · бесплатного тарифа нет |
-| **Оплата помесячно** | **29 900 ₸ / мес** | С НДС, по договору |
+| **РОП-пакет (Битрикс24)** | 29 900 ₸/мес | 9 900 ₽/мес |
+| **Всё вместе** (Битрикс24 + реклама + 1С) | 49 900 ₸/мес | 16 900 ₽/мес |
 
-**Подключить:** [оставить заявку на rcs.kz](https://rcs.kz/contacts?utm_source=github&utm_medium=readme&utm_campaign=mcp-b24) — пришлём файл `.mcpb` и ключ на пробный период, после пробного периода — договор и оплата помесячно. Подробно — [rcs.kz/product/mcp-bitrix24](https://rcs.kz/product/mcp-bitrix24).
+Цена облачной и локальной версии одинаковая. Бесплатного тарифа нет, пробный период — по заявке. Для юрлица РФ покупатель — налоговый агент по НДС 22 %. Подробно — [rcs.kz/product/mcp-bitrix24](https://rcs.kz/product/mcp-bitrix24).
 
-Внутри тарифа — неограниченное число сотрудников портала. Обновления в рамках текущей мажорной версии включены. Поддержка: `support@rcs.kz`, ответ в течение рабочего дня (Алматы, UTC+5).
-
-### Требования
-
-- Claude Desktop 0.8.0+ (или любой MCP-совместимый клиент)
-- macOS 13+, Windows 10+, либо Linux с `libsecret`
-- Bitrix24 Cloud tenant с правами администратора (для создания входящего вебхука)
-- Node.js 20 LTS или 22 LTS (только для ручной npm-установки, путь для продвинутых)
-
-### Установка
-
-**Рекомендуется:** получить `.mcpb`-бандл по [заявке на rcs.kz](https://rcs.kz/contacts?utm_source=github&utm_medium=readme&utm_campaign=mcp-b24) и установить в Claude Desktop одним кликом. Пошаговая инструкция — [`docs/install/claude-desktop.md`](./docs/install/claude-desktop.md).
-
-Бандл самодостаточен: один файл, ставить Node.js и зависимости не нужно, один и тот же артефакт работает на macOS, Windows и Linux. Ссылку вебхука и лицензионный ключ Claude Desktop спрашивает формой — править `claude_desktop_config.json` руками не требуется.
-
-> **Про npm.** В реестре сейчас лежит сборка предыдущего поколения — без инструментов по телефонии и открытым линиям. Публикация 2.1.0 готовится; до неё ставьте `.mcpb`.
-
-### Поддержка и SLA
-
-- Ответ в течение 1 рабочего дня (Пн–Пт, 09:00–18:00 Asia/Almaty, UTC+5).
-- Патч-релизы в течение 5 рабочих дней после воспроизведения бага.
-- Безопасность: `security@rcs.kz` + PGP-ключ опубликован в [`SECURITY.md`](./SECURITY.md). Ответ в течение 24 часов, фикс в 7 дней, кредит репортеру (если не просил иное).
-
-### Вендор
-
-**RCS** (ИП КВАНТ, ИИН 871228350772, г. Астана) — партнёр фирмы «1С» в Казахстане с 2009 года, франчайзи 62997-KZ.
-
-- Сайт: <https://rcs.kz>
-- Email: `support@rcs.kz`
-- GitHub: <https://github.com/rcs-kz/bitrix24-mcp> (публичный README + docs; исходники проприетарны)
+### Поддержка
+go@rcs.kz — ответ в течение рабочего дня (Алматы, UTC+5). RCS (ИП КВАНТ, Астана) — партнёр фирмы «1С» в Казахстане с 2009 года.
 
 ---
 
-## 🇬🇧 English
+## English
 
-### What it is
+**What it is.** bitrix24-mcp connects Claude to Bitrix24 Cloud: the AI works with leads, deals, tasks, chats, open lines and call statistics; deletes and bulk changes run only after you confirm.
 
-**bitrix24-mcp** is a Model Context Protocol server that connects Claude Desktop to a Bitrix24 Cloud tenant. Install once, authorise against a Bitrix24 inbound webhook (or Bitrix24.Market OAuth app) — Claude gains **55 tools** spanning CRM (contacts, companies, deals, leads, products), Tasks, Users, Instant Messaging, and Calendar.
+### Two ways to connect
 
-Claude then does what Claude does best — reasoning over unstructured requests like *"Summarise every deal over 50 M KZT that slipped its close date this quarter, email the three biggest to the account owner, and create a follow-up task for each"* — and calls the Bitrix24 REST API on your behalf, with your approval.
+- **Hosted connector** — works in claude.ai (browser), the Claude mobile app and Claude Desktop; nothing to install. Each employee signs in with their own Bitrix24 login (OAuth) and sees only what the portal allows them. Steps: request access at [rcs.kz/product/oblachnyj-mcp](https://rcs.kz/product/oblachnyj-mcp) → your Bitrix24 admin installs the app → add the connector URL `https://b24-mcp.rcs.kz/t/<portal-code>/mcp` to Claude once (in Claude Team the owner does it for everyone) → each employee clicks Connect.
+- **Local `.mcpb`** for Claude Desktop — request the file and a trial key, create an inbound webhook (`crm, task, calendar, im, imopenlines, telephony, user, department`), open the `.mcpb` in Claude Desktop.
 
-### Why it exists
+Claude Code [verify]: `claude mcp add --transport http bitrix24 https://b24-mcp.rcs.kz/t/<portal-code>/mcp`
 
-Generic "connect AI to CRM" tools optimise for demo-ability. We optimise for the evening after the demo, when rate limits, audit trails, failed-write recovery, and auth-token hygiene decide whether the product stays in your stack.
+### What you can ask
 
-### What's in the box
+- "How many calls did each sales rep make and miss this week?"
+- "Show the open-line conversation for deal #… and the first-response time."
+- "Which deals have been stuck in 'Proposal sent' for 14+ days, and what did reps write in the timeline?"
+- "Create a lead with email …, link it to company …, assign a follow-up task for tomorrow." — asks for confirmation.
+- "Summarise this week's pipeline and post it to the sales team chat."
 
-**55 tools, all of them:**
+Local 2.3.0: 61 tools; hosted: 64 Bitrix24 tools (Drive, workgroups and Feed read-only; batch and raw REST disabled). Bitrix24 Cloud only.
 
-- **Type-safe** — every argument validated with Zod against a strict JSON schema before the REST call leaves the machine.
-- **Confirm-gated by default** — destructive tools (`*_delete`, `*_update` with mass-selectors) declare `destructive: true` in the manifest. Compliant clients surface a confirmation dialog.
-- **Rate-limited** — per-tenant, per-user, per-tool. Bulk imports queue with backpressure instead of DDoS-ing your own Bitrix24.
-- **Audit-logged** — every call writes a JSON line to `~/.bitrix24-mcp/audit.log` with timestamp, tool, caller, rate-limit remaining, duration, result. User-readable only.
+### How it compares
 
-**Coverage:** CRM (contacts, companies, deals, leads, products, activities + cross-type search), Tasks (create, assign, move stages, comment, attach files, log time), Users (list, get, by-department), IM (chat, DM, recent), Calendar (list, CRUD, respond). Exhaustive reference: `docs/TOOLS.md` on the landing page after install.
-
-### Security posture
-
-- **Webhook URL / OAuth tokens in the OS keychain** (Keychain / Credential Manager / libsecret via `keytar`). Never in a config file, never in env vars, never echoed in logs.
-- **No telemetry.** We do not collect usage metrics, crash reports, or tool-call patterns.
-- **Declared network egress.** Two hosts, both visible to your firewall: `*.bitrix24.{kz,ru,com}` (your tenant) and `license.rcs.kz` (24 h license check, fail-open after a 14-day grace period).
-- **Bundle integrity.** Production bundle ships as V8 bytecode with SHA-256 fingerprint verified at load time from five independent check-sites.
-- **ECDSA-signed licenses.** P-256 signature over tenant-scoped bundle hash + expiry. Leaked licenses cannot be retargeted to another tenant.
-
-Full threat model and 10-attack harness: [`docs/threat-model.md`](./docs/threat-model.md).
-
-### Who it's for
-
-- Bitrix24 customers on Claude Pro / Team / Enterprise who want to stop context-switching between the chat window and the CRM.
-- RCS clients (existing 1С franchise portfolio in Kazakhstan) who want a single trusted vendor for Bitrix24 automation on top of their existing 1С integrations.
-- Ops / IT teams who need to approve an AI-CRM integration and will ask pointed questions about token storage, audit, and rate limiting.
-
-### What it is *not*
-
-- Not a chat widget embedded inside Bitrix24. Claude lives in Claude Desktop (or any MCP-compatible client).
-- Not a no-code automation tool.
-- Not an on-premise Bitrix24 connector. Cloud tenants only.
-- Not a free tool.
-
-### Sales-floor oversight, not just CRM access
-
-Most AI integrations for Bitrix24 can see records and deals, and stop there. The conversations stay invisible: telephony calls, open-line chats with clients, the notes reps leave on a timeline. That is where the answer to "why did this deal stall" actually lives.
-
-- **Calls** — how many each rep placed and answered, how many were missed, duration, link to the recording.
-- **Open lines** — WhatsApp, Telegram, site widget: the full client conversation and time-to-first-response.
-- **CRM notes** — what reps wrote about stalled deals, not just what the fields say.
-- **Report to the head of sales** — assemble the digest and post it straight into a Bitrix24 chat.
-- All of it in plain language, with no report builder and no development work.
-
-This requires the `imopenlines` and `telephony` scopes on the portal side. Off-the-shelf connectors do not request them — which is why they hit a ceiling on the first real manager-performance scenario.
+Bitrix24 has its own official MCP server for external AI systems; per Bitrix24 help (updated 12 Oct 2026) external MCP integrations require the "BitrixGPT + Marketplace" subscription. If you have it and need CRM and tasks, start there. Choose ours for sales-team control (calls, transcripts, open lines, first-response time, reports to chat), for one connector with Yandex Direct / VK Ads / Roistat and 1C, and for partner support in Kazakhstan. We have not compared the official tool list line by line.
 
 ### Pricing
 
-| Tier | Price | What you get |
-|---|---|---|
-| **Trial period** | **on request** | All 55 tools · no credit card · there is no free plan |
-| **Monthly** | **29 900 ₸/mo** | VAT included, under contract |
-
-**Get started:** [request access on rcs.kz](https://rcs.kz/contacts?utm_source=github&utm_medium=readme&utm_campaign=mcp-b24) — we send the `.mcpb` bundle and a trial key; after the trial period — a contract and monthly billing. Details: [rcs.kz/product/mcp-bitrix24](https://rcs.kz/product/mcp-bitrix24).
-
-
-## Links
-
-- **Documentation:** [`docs/install/claude-desktop.md`](./docs/install/claude-desktop.md)
-- **Product page / request access:** <https://rcs.kz/product/mcp-bitrix24>
-- **Changelog:** [`CHANGELOG.md`](./CHANGELOG.md)
-- **Threat model:** [`docs/threat-model.md`](./docs/threat-model.md)
-- **Privacy & Terms:** <https://rcs-kz.github.io/bitrix24-mcp/privacy.html> · <https://rcs-kz.github.io/bitrix24-mcp/terms.html>
-- **npm:** <https://www.npmjs.com/package/@rcs-kz/bitrix24-mcp>
-- **MCP Registry:** `io.github.rcs-kz/bitrix24-mcp`
-
-## License
-
-This repository is licensed under [CC BY-ND 4.0](./LICENSE) (documentation) — see [`LICENSE`](./LICENSE). The **software itself** (the npm package, `.mcpb` bundle, and all related artifacts) is governed by the [Terms of Service](https://rcs-kz.github.io/bitrix24-mcp/terms.html); source is proprietary.
+Sales-manager package (Bitrix24): 29 900 KZT/month incl. 16% VAT (9 900 RUB by invoice). Everything (Bitrix24 + ads + 1C): 49 900 KZT (16 900 RUB). Same price for hosted and local. No free tier; trial on request. Support: go@rcs.kz.
